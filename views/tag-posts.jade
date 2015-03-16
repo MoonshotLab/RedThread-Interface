@@ -3,6 +3,10 @@ extends _layout
 block head
   link(rel='stylesheet', href='/tag-posts.css')
   script(src='/tag-posts.js')
+  script.
+    var tweets = !{JSON.stringify(tweets)}
 
 block content
-  h1 Tag Posts
+  .container
+    h1.page-header Tag Content
+    ul.list-group#tweets

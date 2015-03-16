@@ -1,3 +1,9 @@
-body{
-  background-color: blue;
+.tweet.retweet{
+  background-color: rgba(0,0,0,.05);
+}
+.tweet .tweet-text{
+  margin-bottom: 10px;
+}
+.tweet .stats .key{
+  padding-right: 7px;
 }
