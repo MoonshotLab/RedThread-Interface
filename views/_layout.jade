@@ -1,0 +1,21 @@
+doctype html
+html
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport', content='width=device-width, user-scalable=no')
+
+    link(rel='stylesheet', href='/vendor/bootstrap/dist/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/vendor/bootstrap/dist/css/bootstrap-theme.min.css')
+
+    script(src='/socket.io/socket.io.js')
+    script(src='/vendor/jquery/dist/jquery.min.js')
+    script(src='/vendor/bootstrap/dist/js/bootstrap.min.js')
+    script(src='/vendor/d3/d3.min.js')
+
+    script.
+      var socket = io();
+
+    block head
+
+    body
+      block content
