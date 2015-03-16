@@ -1,7 +1,7 @@
 var express = require('express');
 var http = require('http');
 var path = require('path');
-var fs = require('fs');
+var db = require('./lib/db');
 var port = process.env.PORT || 3000;
 var app = express();
 
@@ -16,7 +16,9 @@ server.listen(port, function(){
 
 
 app.get('/', function(req ,res){
-  res.render('tag-posts');
+  db.getMany('tweets').then(function(tweets){
+    res.render('tag-posts', { tweets : tweets });
+  });
 });
 
 app.get('/tag-posts', function(req ,res){
@@ -31,5 +33,12 @@ app.get('/view-data', function(req ,res){
 var io = require('socket.io')(server);
 
 io.on('connection', function(socket){
-  console.log('socket connected');
+
+  socket.on('tag-tweet', function(tag){
+    db.addTagToTweet(tag);
+  });
+
+  socket.on('untag-tweet', function(tag){
+    db.removeTagFromTweet(tag);
+  });
 });
