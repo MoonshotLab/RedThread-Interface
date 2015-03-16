@@ -6,6 +6,8 @@ $(function(){
     if(!tweet.retweet) tweet.retweet = [];
     if(!tweet.reply) tweet.reply = [];
     if(!tweet.favorite) tweet.favorite = [];
+    if(!tweet.pillar) tweet.pillar = [];
+    if(!tweet.authority) tweet.authority = [];
 
     // is it a regular tweet or a retweet?
     if(tweet.original.in_reply_to_status_id) tweet.type = 'retweet';
@@ -19,13 +21,14 @@ $(function(){
 
     // add an event handler so the checkboxes work
     $('#tweet-' + tweet._id).find('input').change(function(e){
-      if($(this).prop('checked')){
-        socket.emit('tag-tweet', {
-          type  : $(this).data('type'),
-          id    : $(this).data('id'),
-          val   : $(this).val()
-        });
-      }
+      var evt = 'untag-tweet';
+      if($(this).prop('checked')) evt = 'tag-tweet';
+
+      socket.emit(evt, {
+        type  : $(this).data('type'),
+        id    : $(this).data('id'),
+        val   : $(this).val()
+      });
     });
   });
 });
@@ -69,7 +72,11 @@ templates.tweet = _.template([
             '<% _.each(pillars, function(pillar){ %>',
               '<div class="checkbox">',
                 '<label>',
-                  '<input data-id="<%= tweet._id %>" data-type="pillar" type="checkbox" value=<%= pillar.name %> />',
+                  '<% if(tweet.pillar.indexOf(pillar.name) != -1){ %>',
+                    '<input checked data-id="<%= tweet._id %>" data-type="pillar" type="checkbox" value=<%= pillar.name %> />',
+                  '<% } else{ %>',
+                    '<input data-id="<%= tweet._id %>" data-type="pillar" type="checkbox" value=<%= pillar.name %> />',
+                  '<% } %>',
                   '<%= pillar.human %>',
                 '</label>',
               '</div>',
@@ -79,7 +86,11 @@ templates.tweet = _.template([
             '<% _.each(authorities, function(authority){ %>',
               '<div class="checkbox authority">',
                 '<label>',
-                  '<input data-id="<%= tweet._id %>" data-type="authority" type="checkbox" value=<%= authority.name %> />',
+                  '<% if(tweet.authority.indexOf(authority.name) != -1){ %>',
+                    '<input checked data-id="<%= tweet._id %>" data-type="authority" type="checkbox" value=<%= authority.name %> />',
+                  '<% } else{ %>',
+                    '<input data-id="<%= tweet._id %>" data-type="authority" type="checkbox" value=<%= authority.name %> />',
+                  '<% } %>',
                   '<%= authority.human %>',
                 '</label>',
               '</div>',
