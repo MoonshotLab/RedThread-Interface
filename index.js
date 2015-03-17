@@ -21,6 +21,12 @@ app.get('/', function(req ,res){
   });
 });
 
+app.get('/tweets', function(req, res){
+  db.getMany('tweets').then(function(tweets){
+    res.send(tweets);
+  });
+});
+
 app.get('/tag-posts', function(req ,res){
   res.render('tag-posts');
 });

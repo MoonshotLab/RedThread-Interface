@@ -2,7 +2,24 @@ extends _layout
 
 block head
   link(rel='stylesheet', href='/view-data.css')
+  script(src='/sunburst.js')
   script(src='/view-data.js')
+  style.
+    body {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      margin: auto;
+      position: relative;
+      width: 960px;
+    }
+    form {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+    }
+    path {
+      stroke: #fff;
+      fill-rule: evenodd;
+    }
 
 block content
-  h1 View Data
+  #sunburst
