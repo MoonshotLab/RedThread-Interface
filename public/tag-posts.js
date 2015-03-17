@@ -1,3 +1,22 @@
+var getInputFromTag = function(tag){
+  var $tweet = $('#tweet-' + tag.id);
+  var selector = 'input[name="' + tag.type + '-' + tag.val + '"]';
+  var $input = $tweet.find(selector);
+
+  return $input;
+};
+
+socket.on('tag-tweet', function(tag){
+  getInputFromTag(tag).prop('checked', true);
+});
+
+
+socket.on('untag-tweet', function(tag){
+  getInputFromTag(tag).prop('checked', false);
+});
+
+
+
 $(function(){
   var $tweets = $('#tweets');
 
@@ -73,9 +92,9 @@ templates.tweet = _.template([
               '<div class="checkbox">',
                 '<label>',
                   '<% if(tweet.pillar.indexOf(pillar.name) != -1){ %>',
-                    '<input checked data-id="<%= tweet._id %>" data-type="pillar" type="checkbox" value=<%= pillar.name %> />',
+                    '<input checked name="pillar-<%=pillar.name %>" data-id="<%= tweet._id %>" data-type="pillar" type="checkbox" value=<%= pillar.name %> />',
                   '<% } else{ %>',
-                    '<input data-id="<%= tweet._id %>" data-type="pillar" type="checkbox" value=<%= pillar.name %> />',
+                    '<input name="pillar-<%=pillar.name %>" data-id="<%= tweet._id %>" data-type="pillar" type="checkbox" value=<%= pillar.name %> />',
                   '<% } %>',
                   '<%= pillar.human %>',
                 '</label>',
@@ -87,9 +106,9 @@ templates.tweet = _.template([
               '<div class="checkbox authority">',
                 '<label>',
                   '<% if(tweet.authority.indexOf(authority.name) != -1){ %>',
-                    '<input checked data-id="<%= tweet._id %>" data-type="authority" type="checkbox" value=<%= authority.name %> />',
+                    '<input checked name="authority-<%=authority.name %>" data-id="<%= tweet._id %>" data-type="authority" type="checkbox" value=<%= authority.name %> />',
                   '<% } else{ %>',
-                    '<input data-id="<%= tweet._id %>" data-type="authority" type="checkbox" value=<%= authority.name %> />',
+                    '<input name="authority-<%=authority.name %>" data-id="<%= tweet._id %>" data-type="authority" type="checkbox" value=<%= authority.name %> />',
                   '<% } %>',
                   '<%= authority.human %>',
                 '</label>',

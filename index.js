@@ -35,10 +35,14 @@ var io = require('socket.io')(server);
 io.on('connection', function(socket){
 
   socket.on('tag-tweet', function(tag){
-    db.addTagToTweet(tag);
+    db.addTagToTweet(tag).then(function(){
+      socket.broadcast.emit('tag-tweet', tag);
+    });
   });
 
   socket.on('untag-tweet', function(tag){
-    db.removeTagFromTweet(tag);
+    db.removeTagFromTweet(tag).then(function(){
+      socket.broadcast.emit('untag-tweet', tag);
+    });
   });
 });
