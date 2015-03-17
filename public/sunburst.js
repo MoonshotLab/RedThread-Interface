@@ -67,7 +67,7 @@ Sunburst.prototype.create = function(opts){
 
 
   d3.selectAll("input").on("change", function change() {
-    var value = this.value === "count" ? function() { return 1; } : function(d) { return d.size; };
+    var value = this.value === "count" ? function() { return 1; } : function(d) { return d.score; };
 
     path.data(partition.value(value).nodes)
       .transition()
