@@ -31,8 +31,8 @@ app.get('/tag-posts', function(req ,res){
   res.render('tag-posts');
 });
 
-app.get('/view-data', function(req ,res){
-  res.render('view-data');
+app.get('/sunburst', function(req ,res){
+  res.render('sunburst');
 });
 
 
