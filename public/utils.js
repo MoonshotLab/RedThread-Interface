@@ -15,3 +15,19 @@ utils.normalizeTweet = function(tweet){
 
   return tweet;
 };
+
+
+// define an rgb strategy based color scheme
+utils.colorScheme = {
+  'default'   : [0, 0, 0],
+  'celebrate' : [76, 253, 89],
+  'inspire'   : [191, 74, 251],
+  'discover'  : [252, 71, 195],
+  'create'    : [254, 240, 121],
+  'crew'      : [114, 164, 252],
+  'craft'     : [76, 253, 89],
+  'style'     : [191, 74, 251],
+  'music'     : [252, 71, 195],
+  'play'      : [254, 240, 121],
+  'none'      : [118, 250, 254],
+};

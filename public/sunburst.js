@@ -1,9 +1,11 @@
 // onHover : the callback for hover events
 var Sunburst = function(opts){
   var self = this;
+
   for(var key in opts){
     self[key] = opts[key];
   }
+
   return this;
 };
 
@@ -43,12 +45,29 @@ Sunburst.prototype.create = function(opts){
     .append('path')
     .attr('d', arc)
     .style('fill', function(d) {
-      if(d.name == 'sunburst') return '#2c3e4f';
-      else if(d.percent){
-        if(d.percent < 0.1) d.percent = 0.1;
-        return 'rgba(58,153,217,'+ d.percent + ')';
+      if(d.name == 'sunburst') return '#202020';
+
+      var strategy;
+      var alpha;
+      if(d.depth === 4){
+        alpha = 0.25;
+        strategy = d.parent.parent.parent.variety;
+      } else if(d.depth === 3){
+        alpha = 0.5;
+        strategy = d.parent.parent.variety;
+      } else if(d.depth === 2){
+        alpha = 0.75;
+        strategy = d.parent.variety;
+      } else if(d.variety){
+        alpha = 1;
+        strategy = d.variety;
+      } else{
+        alpha = 1;
+        strategy = 'default';
       }
-      else return '#fff';
+
+      var color = utils.colorScheme[strategy];
+      return 'rgba(' + color.join(',') + ', ' + alpha + ')';
     })
     .on('mouseover', mouseover)
     .on('click', click).each(stash);

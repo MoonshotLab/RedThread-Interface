@@ -33,14 +33,13 @@ var createDataTree = function(tweets, strategy){
   });
 
   // score the entire data tree model
-  dataTree.children.forEach(scoreModel)
+  dataTree.children.forEach(scoreModel);
   function scoreModel(child){
     if(child.children && child.children.length)
       child.children.forEach(scoreModel);
     else if(child.type == 'interaction'){
       var score = calculate.score(child.variety, child.interaction.user);
       child.score = score;
-      // console.log(child);
     }
   }
 
@@ -108,7 +107,7 @@ var templates = {};
 
 templates.interaction = _.template([
   '<header>',
-    '<h3 class="score"><%= Math.round(score*100)/100 %></h3>',
+    '<h3 class="score"><%= Math.round(value*100)/100 %></h3>',
     '<h2><%= variety %></h2>',
   '</header>',
   '<section class="why">',
@@ -148,7 +147,7 @@ templates.interaction = _.template([
 
 templates.interactionGroup = _.template([
   '<header>',
-    // '<h3 class="score"><%= Math.round(score*100)/100 %></h3>',
+    '<h3 class="score"><%= Math.round(value*100)/100 %></h3>',
     '<h2><%= variety %></h2>',
   '</header>',
   '<section class="why">',
@@ -159,7 +158,7 @@ templates.interactionGroup = _.template([
 
 templates.tweet = _.template([
   '<header>',
-    // '<h3 class="score"><%= Math.round(score*100)/100 %></h3>',
+    '<h3 class="score"><%= Math.round(value*100)/100 %></h3>',
     '<h2><%= variety %></h2>',
   '</header>',
   '<section class="why">',
@@ -170,7 +169,7 @@ templates.tweet = _.template([
 
 templates.authority = _.template([
   '<header>',
-    '<h3 class="score"><%= Math.round(score*100)/100 %></h3>',
+    '<h3 class="score"><%= Math.round(value*100)/100 %></h3>',
     '<h2>Authority <span class="small"><%= name %></span></h2>',
   '</header>'
 ].join(''));
@@ -178,7 +177,7 @@ templates.authority = _.template([
 
 templates.pillar = _.template([
   '<header>',
-    // '<h3 class="score"><%= Math.round(score*100)/100 %></h3>',
+    '<h3 class="score"><%= Math.round(value*100)/100 %></h3>',
     '<h2><%= variety %></h2>',
   '</header>'
 ].join(''));
