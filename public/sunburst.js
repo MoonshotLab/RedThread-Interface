@@ -1,17 +1,24 @@
-var Sunburst = function(){
+// onHover : the callback for hover events
+var Sunburst = function(opts){
+  var self = this;
+  for(var key in opts){
+    self[key] = opts[key];
+  }
   return this;
 };
 
 
 
-// this is just a couple d3 samples smashed together
+// width  : the width
+// height : the height
 Sunburst.prototype.create = function(opts){
+  var self = this;
   var radius = Math.min(opts.width, opts.height) / 2;
 
   var x = d3.scale.linear().range([0, 2 * Math.PI]);
   var y = d3.scale.sqrt().range([0, radius]);
 
-  var color = d3.scale.category20c();
+  var color = d3.scale.category20b();
 
   var svgTranslate = 'translate(' + opts.width / 2 + ',' + (opts.height / 2 + 10) + ')';
   var svg = d3.select('#sunburst').append('svg')
@@ -33,39 +40,18 @@ Sunburst.prototype.create = function(opts){
 
   var node = opts.data;
   var path = svg.datum(node).selectAll('path')
-    .data(partition.nodes)
+    .data(partition.value(function(d) { return d.score; }).nodes)
     .enter()
     .append('path')
     .attr('d', arc)
     .style('fill', function(d) {
       return color((d.children ? d : d.parent).name);
-    }).on('click', click).each(stash);
-
-
-  var text = svg.selectAll('text').data(partition.nodes);
-  var textEnter = text.enter().append('text')
-    .style('fill-opacity', 1)
-    .style('fill', function(d) { return '#000'; })
-    .attr('text-anchor', function(d) {
-      return x(d.x + d.dx / 2) > Math.PI ? 'end' : 'start';
     })
-    .attr("dy", ".2em")
-    .attr("transform", function(d) {
-      var multiline = (d.name || "").split(" ").length > 1;
-      var angle = x(d.x + d.dx / 2) * 180 / Math.PI - 90;
-      var rotate = angle + (multiline ? - 0.5 : 0);
-      return "rotate(" + rotate + ")translate(" + (y(d.y) + 5) + ")rotate(" + (angle > 90 ? -180 : 0) + ")";
-    }).on("click", click);
-
-  textEnter.append("tspan")
-    .attr("x", 0)
-    .text(function(d) { return d.depth ? d.name.split(" ")[0] : ""; });
-  textEnter.append("tspan")
-    .attr("x", 0)
-    .attr("dy", "1em")
-    .text(function(d) { return d.depth ? d.name.split(" ")[1] || "" : ""; });
+    .on('mouseover', mouseover)
+    .on('click', click).each(stash);
 
 
+  // view the data by count or score
   d3.selectAll("input").on("change", function change() {
     var value = this.value === "count" ? function() { return 1; } : function(d) { return d.score; };
 
@@ -76,31 +62,22 @@ Sunburst.prototype.create = function(opts){
   });
 
 
-  function click(d) {
+  function mouseover(d){
+    if(self.onHover){
+      self.onHover({
+        type  : d.type,
+        name  : d.name,
+        score : d.score,
+        data  : d.data,
+        plural : d.plural
+      });
+    }
+  }
+
+
+  function click(d){
     node = d;
     path.transition().duration(1000).attrTween("d", arcTweenZoom(d));
-
-    // Somewhat of a hack as we rely on arcTween updating the scales.
-    text.style("visibility", function(e) {
-      return isParentOf(d, e) ? null : d3.select(this).style("visibility");
-    }).transition()
-      .duration(1000)
-      .attrTween("text-anchor", function(d) {
-        return function() {
-          return x(d.x + d.dx / 2) > Math.PI ? "end" : "start";
-        };
-      })
-      .attrTween("transform", function(d) {
-        var multiline = (d.name || "").split(" ").length > 1;
-        return function() {
-          var angle = x(d.x + d.dx / 2) * 180 / Math.PI - 90;
-          var rotate = angle + (multiline ? -0.5 : 0);
-          return "rotate(" + rotate + ")translate(" + (y(d.y) + 5) + ")rotate(" + (angle > 90 ? -180 : 0) + ")";
-        };
-      }).style("fill-opacity", function(e) { return isParentOf(d, e) ? 1 : 1e-6; })
-      .each("end", function(e) {
-        d3.select(this).style("visibility", isParentOf(d, e) ? null : "hidden");
-      });
   }
 
 
