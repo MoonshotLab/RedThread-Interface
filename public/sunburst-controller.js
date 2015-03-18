@@ -1,126 +1,86 @@
-var prepareTweetData = function(tweets){
+// tweets:    an array of tweets
+// strategy:  pillar or authority
+var createDataTree = function(tweets, strategy){
+  var dataTree = { name : 'sunburst', children : [] };
 
-  var tweetTemplate = [
-    { 'name' : 'retweet',  'plural' : 'retweets',   'type' : 'interactionType', 'score' : 0, 'children' : [] },
-    { 'name' : 'reply',    'plural' : 'replies',    'type' : 'interactionType', 'score' : 0, 'children' : [] },
-    { 'name' : 'favorite', 'plural' : 'favorites',  'type' : 'interactionType', 'score' : 0, 'children' : [] }
-  ];
+  // which kind of tree are we going to create?
+  var strategyNames;
+  if(strategy == 'pillar')
+    strategyNames = ['celebrate', 'inspire', 'discover', 'create', 'none'];
+  else
+    strategyNames = ['crew', 'craft', 'style', 'music', 'play', 'none'];
 
-  var authorityTemplate = [
-    { 'name' : 'crew',  'type' : 'authority', 'score' : 0, 'children' : [] },
-    { 'name' : 'craft', 'type' : 'authority', 'score' : 0, 'children' : [] },
-    { 'name' : 'style', 'type' : 'authority', 'score' : 0, 'children' : [] },
-    { 'name' : 'music', 'type' : 'authority', 'score' : 0, 'children' : [] },
-    { 'name' : 'play',  'type' : 'authority', 'score' : 0, 'children' : [] },
-    { 'name' : 'none',  'type' : 'authority', 'score' : 0, 'children' : [] }
-  ];
+  // loop over the type names and create a starter tree
+  strategyNames.forEach(function(name){
+    dataTree.children.push({
+      variety   : name,
+      type      : strategy,
+      children  : []
+    });
+  });
 
-  var sunburstData = {
-    name      : 'sunburst',
-    score     : 0,
-    children  : [
-      { 'name' : 'celebrate', 'type' : 'pillar', 'score' : 0, 'children' : _.cloneDeep(authorityTemplate) },
-      { 'name' : 'inspire',   'type' : 'pillar', 'score' : 0, 'children' : _.cloneDeep(authorityTemplate) },
-      { 'name' : 'discover',  'type' : 'pillar', 'score' : 0, 'children' : _.cloneDeep(authorityTemplate) },
-      { 'name' : 'create',    'type' : 'pillar', 'score' : 0, 'children' : _.cloneDeep(authorityTemplate) },
-      { 'name' : 'none',      'type' : 'pillar', 'score' : 0, 'children' : _.cloneDeep(authorityTemplate) }
-    ]
-  };
+  // tweets can comeback from the server a little bit incomplete
+  tweets.forEach(utils.normalizeTweet);
 
+  // loop over each tweet creating the complete interaction. then apply
+  // the interaction to the dataTree strategy
+  tweets.forEach(function(tweet){
+    var interaction = buildInteraction(tweet);
+    interaction.strategies.forEach(function(interactionStrategy){
+      _.findWhere(dataTree.children, { variety : interactionStrategy })
+        .children.push(interaction);
+    });
+  });
 
-  // tweets can come from the server with missing data
-  // ensures all required properties exist and if not, gives
-  // them a default property if necessary
-  var normalizeTweet = function(tweet){
-    if(!tweet.pillar)     tweet.pillar    = [];
-    if(!tweet.authority)  tweet.authority = [];
-    if(!tweet.retweet)    tweet.retweet   = [];
-    if(!tweet.reply)      tweet.reply     = [];
-    if(!tweet.favorite)   tweet.favorite  = [];
+  // score the entire data tree model
+  dataTree.children.forEach(scoreModel)
+  function scoreModel(child){
+    if(child.children && child.children.length)
+      child.children.forEach(scoreModel);
+    else if(child.type == 'interaction'){
+      var score = calculate.score(child.variety, child.interaction.user);
+      child.score = score;
+      // console.log(child);
+    }
+  }
 
-    if(!tweet.pillar.length) tweet.pillar = ['none'];
-    if(!tweet.authority.length) tweet.authority = ['none'];
+  // create a detailed interaction including the container for the original
+  // tweet, a breakdown of replies, favorites, and retweets,
+  // and the eventual user engagement
+  function buildInteraction(tweet){
+    var tweetType = tweet.original.in_reply_to_status_id !== null ? 'reply' : 'tweet';
+    var container = {
+      strategies  : tweet[strategy],
+      variety     : tweetType,
+      type        : 'tweet',
+      children    : [],
+      original    : tweet.original
+    };
 
-    return tweet;
-  };
-
-  var createInteractions = function(tweet){
-    var template = _.cloneDeep(tweetTemplate);
-    template.forEach(function(item){
-      var category = item;
-      var interactionType = item.name;
-      item.data = { tweet : tweet.original };
-
+    var interactionTypes = ['retweet', 'reply', 'favorite'];
+    var pluralInteractionTypes = ['retweets', 'replies', 'favorites'];
+    interactionTypes.forEach(function(interactionType, i){
+      var interactionGroup = {
+        variety   : pluralInteractionTypes[i],
+        type      : 'interactionGroup',
+        original  : tweet.original,
+        children  : []
+      };
+      container.children.push(interactionGroup);
       tweet[interactionType].forEach(function(interaction){
-        var score = calculate.score(item.name, interaction.user);
-        category.score += score;
-
-        category.children.push({
-          name  : item.name,
-          type  : 'interaction',
-          score : score,
-          data  : {
-            interaction : interaction,
-            tweet       : tweet.original
-          }
+        interactionGroup.children.push({
+          variety     : interactionType,
+          type        : 'interaction',
+          original    : tweet.original,
+          interaction : interaction
         });
       });
     });
 
-    template.forEach(function(item){
-      item.children.forEach(function(child){
-        child.percent = child.score/item.score;
-      });
-    });
+    return container;
+  }
 
-    return template;
-  };
-
-  var createAuthorities = function(tweet, pillar){
-    // console.log(tweet);
-    tweet.authority.forEach(function(authorityName){
-      var authority = _.findWhere(pillar.children, { name : authorityName });
-      var interactions = createInteractions(tweet);
-      interactions.forEach(function(interaction){
-        authority.score += interaction.score;
-        authority.children.push(interaction);
-      });
-      interactions.forEach(function(interaction){
-        interaction.percent = interaction.score/authority.score;
-      });
-    });
-  };
-
-  tweets.forEach(function(tweet){
-    normalizeTweet(tweet);
-    tweet.pillar.forEach(function(pillarName){
-      var pillar = _.findWhere(sunburstData.children, { name : pillarName });
-      createAuthorities(tweet, pillar);
-    });
-  });
-
-  // total pillar score
-  sunburstData.children.forEach(function(pillar){
-    pillar.children.forEach(function(authority){
-      pillar.score += authority.score;
-    });
-  });
-
-  // get authority percent
-  var pillarsTotal = 0;
-  sunburstData.children.forEach(function(pillar){
-    pillarsTotal += pillar.score;
-    pillar.children.forEach(function(authority){
-      authority.percent = authority.score / pillar.score;
-    });
-  });
-
-  // get pillar pecent
-  sunburstData.children.forEach(function(pillar){
-    pillar.percent = pillar.score/pillarsTotal;
-  });
-
-  return sunburstData;
+  return dataTree;
 };
 
 
@@ -138,7 +98,7 @@ $(function(){
     sunburst.create({
       width   : 600,
       height  : 650,
-      data    : prepareTweetData(data)
+      data    : createDataTree(data, 'pillar')
     });
   });
 });
@@ -149,14 +109,14 @@ var templates = {};
 templates.interaction = _.template([
   '<header>',
     '<h3 class="score"><%= Math.round(score*100)/100 %></h3>',
-    '<h2>Interaction <span class="small"><%= name %></span></h2>',
+    '<h2><%= variety %></h2>',
   '</header>',
   '<section class="why">',
-    '<p class="tweet"><%= data.tweet.text %></p>',
+    '<p class="tweet"><%= original.text %></p>',
   '</section>',
-  '<% if(data.interaction.text){ %>',
+  '<% if(interaction.text){ %>',
     '<section class="what">',
-      '<p class="tweet"><%= data.interaction.text %></p>',
+      '<p class="tweet"><%= interaction.text %></p>',
     '</section>',
   '<% } %>',
   '<section class="who">',
@@ -164,35 +124,46 @@ templates.interaction = _.template([
       '<li>',
         '<span class="key">Who:</span>',
         '<span class="value">',
-          '<a target="blank" href="http://twitter.com/<%= data.interaction.user.screen_name %>">',
-            '<%= data.interaction.user.screen_name %>',
+          '<a target="blank" href="http://twitter.com/<%= interaction.user.screen_name %>">',
+            '<%= interaction.user.screen_name %>',
           '</a>',
         '</span>',
       '</li>',
       '<li>',
         '<span class="key">Followers:</span>',
-        '<span class="value"><%= data.interaction.user.followers_count %></span>',
+        '<span class="value"><%= interaction.user.followers_count %></span>',
       '</li>',
       '<li>',
         '<span class="key">Following:</span>',
-        '<span class="value"><%= data.interaction.user.friends_count %></span>',
+        '<span class="value"><%= interaction.user.friends_count %></span>',
       '</li>',
       '<li>',
         '<span class="key">Total Statuses:</span>',
-        '<span class="value"><%= data.interaction.user.statuses_count %></span>',
+        '<span class="value"><%= interaction.user.statuses_count %></span>',
       '</li>',
     '</ul>',
   '</section>',
 ].join(''));
 
 
-templates.interactionType = _.template([
+templates.interactionGroup = _.template([
   '<header>',
-    '<h3 class="score"><%= Math.round(score*100)/100 %></h3>',
-    '<h2>Interaction <span class="small"><%= plural %></span></h2>',
+    // '<h3 class="score"><%= Math.round(score*100)/100 %></h3>',
+    '<h2><%= variety %></h2>',
   '</header>',
   '<section class="why">',
-    '<p class="tweet"><%= data.tweet.text %></p>',
+    '<p class="tweet"><%= original.text %></p>',
+  '</section>',
+].join(''));
+
+
+templates.tweet = _.template([
+  '<header>',
+    // '<h3 class="score"><%= Math.round(score*100)/100 %></h3>',
+    '<h2><%= variety %></h2>',
+  '</header>',
+  '<section class="why">',
+    '<p class="tweet"><%= original.text %></p>',
   '</section>',
 ].join(''));
 
@@ -207,25 +178,7 @@ templates.authority = _.template([
 
 templates.pillar = _.template([
   '<header>',
-    '<h3 class="score"><%= Math.round(score*100)/100 %></h3>',
-    '<h2>Pillar <span class="small"><%= name %></span></h2>',
+    // '<h3 class="score"><%= Math.round(score*100)/100 %></h3>',
+    '<h2><%= variety %></h2>',
   '</header>'
-].join(''));
-
-
-templates.drawer = _.template([
-  '<h2><%= Math.round(score*100)/100 %></h2>',
-  '<h3><%= name %></h3>',
-  '<% if(data && data.interaction){ %>',
-    '<ul class="interaction">',
-      '<li>',
-        '<span class="key">Time:</span>',
-        '<span class="value"><%= new Date(data.interaction.created_at) %></span>',
-      '</li>',
-      '<li>',
-        '<span class="key">Tweet:</span>',
-        '<span class="value"><%= data.interaction.text %></span>',
-      '</li>',
-    '</ul>',
-  '<% } %>'
 ].join(''));

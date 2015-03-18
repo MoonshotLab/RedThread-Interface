@@ -1,13 +1,15 @@
 extends _layout
 
 block head
+  link(rel='stylesheet', href='/data-viz.css')
   link(rel='stylesheet', href='/sunburst.css')
+  script(src='/utils.js')
   script(src='/calculate.js')
   script(src='/sunburst-controller.js')
   script(src='/sunburst.js')
 
 block content
-  .sunburst
+  .page-container
     .graphic-container
-      #sunburst
+      #graphic
     .drawer

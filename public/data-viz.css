@@ -1,0 +1,49 @@
+body, html{
+  width: 100%;
+  height: 100%;
+}
+body{
+  background: #2c3e4f;
+}
+
+
+.page-container{
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.drawer{
+  background: #22313f;
+  height: 100%;
+  width: 35%;
+  position: absolute;
+  right: 0;
+  top: 0;
+  color: #ecf0f1;
+}
+.drawer header, .drawer section{
+  padding: 15px;
+  border-bottom: 3px solid #283948;
+}
+.drawer h2, .drawer h3{
+  margin: 0;
+}
+
+
+.graphic-container{
+  width: 65%;
+  display: table;
+  height: 100%;
+}
+#graphic{
+  width: 600px;
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+}
+
+
+a{
+  color: #e54d42;
+}
