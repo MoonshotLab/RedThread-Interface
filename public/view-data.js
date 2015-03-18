@@ -67,10 +67,17 @@ var prepareTweetData = function(tweets){
       });
     });
 
+    template.forEach(function(item){
+      item.children.forEach(function(child){
+        child.percent = child.score/item.score;
+      });
+    });
+
     return template;
   };
 
   var createAuthorities = function(tweet, pillar){
+    // console.log(tweet);
     tweet.authority.forEach(function(authorityName){
       var authority = _.findWhere(pillar.children, { name : authorityName });
       var interactions = createInteractions(tweet);
@@ -78,8 +85,9 @@ var prepareTweetData = function(tweets){
         authority.score += interaction.score;
         authority.children.push(interaction);
       });
-
-      pillar.score += authority.score;
+      interactions.forEach(function(interaction){
+        interaction.percent = interaction.score/authority.score;
+      });
     });
   };
 
@@ -91,6 +99,27 @@ var prepareTweetData = function(tweets){
     });
   });
 
+  // total pillar score
+  sunburstData.children.forEach(function(pillar){
+    pillar.children.forEach(function(authority){
+      pillar.score += authority.score;
+    });
+  });
+
+  // get authority percent
+  var pillarsTotal = 0;
+  sunburstData.children.forEach(function(pillar){
+    pillarsTotal += pillar.score;
+    pillar.children.forEach(function(authority){
+      authority.percent = authority.score / pillar.score;
+    });
+  });
+
+  // get pillar pecent
+  sunburstData.children.forEach(function(pillar){
+    pillar.percent = pillar.score/pillarsTotal;
+  });
+
   return sunburstData;
 };
 
@@ -99,8 +128,7 @@ $(function(){
   var $drawer = $('.drawer');
   var sunburst = new Sunburst({
     onHover : function(data){
-      if(data.type)
-        $drawer.html(templates[data.type](data));
+      if(data.type) $drawer.html(templates[data.type](data));
     }
   });
 

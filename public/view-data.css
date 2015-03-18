@@ -4,7 +4,7 @@ body, html{
 }
 
 body{
-  background: #212121;
+  background: #2c3e4f;
 }
 
 .sunburst{
@@ -13,18 +13,20 @@ body{
   height: 100%;
 }
 .sunburst .drawer{
-  background: #252525;
+  background: #22313f;
   height: 100%;
   width: 35%;
   position: absolute;
   right: 0;
   top: 0;
-  border-left: 3px solid #202020;
-  color: rgba(255,255,255,.75);
+  color: #ecf0f1;
+}
+.sunburst a{
+  color: #e54d42;
 }
 .sunburst .drawer header, .sunburst .drawer section{
   padding: 15px;
-  border-bottom: 1px solid #202020;
+  border-bottom: 3px solid #283948;
 }
 .sunburst .drawer h2, .sunburst .drawer h3{
   margin: 0;
@@ -37,7 +39,6 @@ body{
   margin: 0;
   padding: 0;
   list-style-type: none;
-  /*font-size: 120%;*/
 }
 .sunburst .drawer .who .key{
   display: inline-block;
@@ -62,5 +63,5 @@ body{
   vertical-align: middle;
 }
 path {
-  stroke: #202020;
+  stroke: #2c3e4f;
 }

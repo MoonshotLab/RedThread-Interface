@@ -12,13 +12,20 @@ var Sunburst = function(opts){
 // width  : the width
 // height : the height
 Sunburst.prototype.create = function(opts){
+  var colorPalette = {
+    'sunburst'          : '#2c3e4f',
+    'pillar-celebrate'  : '#3a99d9',
+    'pillar-inspire'    : '#2e81b7',
+    'pillar-discover'   : '#2e81b7',
+    'pillar-create'     : '#3a99d9',
+    'pillar-none'       : '#2e81b7'
+  };
+
   var self = this;
   var radius = Math.min(opts.width, opts.height) / 2;
 
   var x = d3.scale.linear().range([0, 2 * Math.PI]);
   var y = d3.scale.sqrt().range([0, radius]);
-
-  var color = d3.scale.category20b();
 
   var svgTranslate = 'translate(' + opts.width / 2 + ',' + (opts.height / 2 + 10) + ')';
   var svg = d3.select('#sunburst').append('svg')
@@ -45,7 +52,12 @@ Sunburst.prototype.create = function(opts){
     .append('path')
     .attr('d', arc)
     .style('fill', function(d) {
-      return color((d.children ? d : d.parent).name);
+      if(d.name == 'sunburst') return '#2c3e4f';
+      else if(d.percent){
+        if(d.percent < 0.1) d.percent = 0.1;
+        return 'rgba(58,153,217,'+ d.percent + ')';
+      }
+      else return '#fff';
     })
     .on('mouseover', mouseover)
     .on('click', click).each(stash);
@@ -69,7 +81,8 @@ Sunburst.prototype.create = function(opts){
         name  : d.name,
         score : d.score,
         data  : d.data,
-        plural : d.plural
+        plural : d.plural,
+        percent : d.percent
       });
     }
   }
