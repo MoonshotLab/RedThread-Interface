@@ -6,7 +6,23 @@ body{
   background: #202020;
 }
 
-
+#key{
+  list-style-type: none;
+  position: absolute;
+  padding: 5px 25px 10px 10px;
+  bottom: 0;
+  background: #232323;
+}
+#key li{
+  margin: 0;
+  color: #ecf0f1;
+}
+#key .key{
+  width: 10px;
+  height: 10px;
+  margin-right: 5px;
+  display: inline-block;
+}
 .page-container{
   position: relative;
   width: 100%;

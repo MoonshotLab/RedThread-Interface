@@ -95,6 +95,8 @@ $(function(){
     click : makeBreadcrumb
   });
 
+  makeKey('pillar');
+
   $.ajax({
     url : '/tweets'
   }).done(function(data){
@@ -105,6 +107,27 @@ $(function(){
     });
   });
 });
+
+
+
+var makeKey = function(strategy){
+  var keyList;
+  var pillars = ['celebrate', 'inspire', 'discover', 'create', 'none'];
+  var authorities = ['crew', 'craft', 'style', 'music', 'play', 'none'];
+
+  if(strategy == 'pillar') keyList = pillars;
+  else keyList = authorities;
+
+  var keys = [];
+  keyList.forEach(function(key){
+    keys.push({
+      color : 'rgb(' + utils.colorScheme[key].join(',') + ')',
+      value : key
+    });
+  });
+
+  $('#key').html(templates.key({ keys : keys }));
+};
 
 
 var makeBreadcrumb = function(data){
@@ -129,6 +152,16 @@ var makeBreadcrumb = function(data){
 
 
 var templates = {};
+
+templates.key = _.template([
+  '<% keys.forEach(function(key){ %>',
+    '<li>',
+      '<span class="key" style=background-color:<%= key.color %>></span>',
+      '<span class="value"><%= key.value %></span>',
+    '</li>',
+  '<% }) %>',
+].join(''));
+
 
 templates.breadcrumb = _.template([
   '<% tree.forEach(function(crumb, i){ %>',
