@@ -14,7 +14,7 @@ var createDataTree = function(tweets, strategy){
   strategyNames.forEach(function(name){
     dataTree.children.push({
       variety   : name,
-      type      : strategy,
+      type      : 'strategy',
       children  : []
     });
   });
@@ -37,7 +37,7 @@ var createDataTree = function(tweets, strategy){
   function scoreModel(child){
     if(child.children && child.children.length)
       child.children.forEach(scoreModel);
-    else if(child.type == 'interaction'){
+    else if(child.type == 'engagement'){
       var score = calculate.score(child.variety, child.interaction.user);
       child.score = score;
     }
@@ -51,7 +51,7 @@ var createDataTree = function(tweets, strategy){
     var container = {
       strategies  : tweet[strategy],
       variety     : tweetType,
-      type        : 'tweet',
+      type        : 'action',
       children    : [],
       original    : tweet.original
     };
@@ -60,18 +60,20 @@ var createDataTree = function(tweets, strategy){
     var pluralInteractionTypes = ['retweets', 'replies', 'favorites'];
     interactionTypes.forEach(function(interactionType, i){
       var interactionGroup = {
-        variety   : pluralInteractionTypes[i],
-        type      : 'interactionGroup',
-        original  : tweet.original,
-        children  : []
+        variety       : interactionTypes[i],
+        type          : 'engagementGroup',
+        humanVariety  : pluralInteractionTypes[i],
+        humanType     : 'Engagement Group',
+        original      : tweet.original,
+        children      : []
       };
       container.children.push(interactionGroup);
       tweet[interactionType].forEach(function(interaction){
         interactionGroup.children.push({
-          variety     : interactionType,
-          type        : 'interaction',
-          original    : tweet.original,
-          interaction : interaction
+          variety       : interactionType,
+          type          : 'engagement',
+          original      : tweet.original,
+          interaction   : interaction
         });
       });
     });
@@ -87,13 +89,7 @@ $(function(){
 
   // create a new instance of the sunburst and attach event handlers
   var $details = $('.drawer').find('.details');
-  var sunburst = new Sunburst({
-    onHover : function(data){
-      if(data.type) $details.html(templates[data.type](data));
-      else $details.html('');
-    },
-    click : makeBreadcrumb
-  });
+  var sunburst = new Sunburst({ onHover : buildDrawer });
 
   // make the key and default it to pillar
   makeKey('pillar');
@@ -127,6 +123,50 @@ $(function(){
 
 
 
+var buildDrawer = function(data){
+  var html = '';
+  var tree = { strategy : null, branches : []};
+
+  // recursively add branches to the data tree
+  var addToTree = function(branch){
+    tree.branches.push({
+      type        : branch.type,
+      variety     : branch.variety,
+      interaction : branch.interaction,
+      original    : branch.original,
+      depth       : branch.depth,
+      score       : branch.value,
+      percent     : branch.value
+    });
+
+    if(branch.depth == 1) tree.strategy = branch.variety;
+    if(branch.depth > 1) addToTree(branch.parent);
+  };
+  if(data.depth) addToTree(data);
+
+  // reverse the tree
+  tree.branches.reverse();
+
+  // discover the color and apply a faded variety to each branch
+  // since we're looping, make the html template
+  tree.branches.forEach(function(branch){
+    branch.color = [
+      'rgba(',
+      utils.colorScheme[tree.strategy].join(','),
+      ',',
+      (tree.branches.length - (branch.depth-1))/tree.branches.length,
+      ')'
+    ].join('');
+
+    html += templates[branch.type](branch);
+  });
+
+  $('.drawer').find('.details').html(html);
+};
+
+
+
+// makes key
 var makeKey = function(strategy){
   var keyList;
   var pillars = ['celebrate', 'inspire', 'discover', 'create', 'none'];
@@ -147,28 +187,87 @@ var makeKey = function(strategy){
 };
 
 
-var makeBreadcrumb = function(data){
-  var crumbs = { variety : 'default', tree : [] };
 
-  var addToCrumb = function(item){
-    crumbs.tree.push({
-      type    : item.type,
-      variety : item.variety
-    });
-
-    if(item.depth == 1) crumbs.variety = item.variety;
-    if(item.depth > 1) addToCrumb(item.parent);
-  };
-
-  if(data.depth) addToCrumb(data);
-
-  crumbs.color = utils.colorScheme[crumbs.variety];
-  crumbs.tree.reverse();
-  $('#breadcrumb').html(templates.breadcrumb(crumbs));
-};
-
-
+// some templates and stuff
 var templates = {};
+
+templates.strategy = _.template([
+  '<section class="strategy">',
+    '<div style="background-color:<%= color %>" class="flag"></div>',
+    '<div class="content">',
+      '<div class="score">',
+        '<span class="percent"><%= percent %>%</span>',
+        '<span class="points"><%= score %></span>',
+      '</div>',
+      '<span class="key"><%= type %></span>',
+      '<span class="value"><%= variety %></span>',
+    '</div>',
+  '</section>'
+].join(''));
+
+templates.action = _.template([
+  '<section class="action">',
+    '<div style="background-color:<%= color %>" class="flag"></div>',
+    '<div class="content">',
+      '<div class="score">',
+        '<span class="percent"><%= percent %>%</span>',
+        '<span class="points"><%= score %></span>',
+      '</div>',
+      '<span class="key">Brand Action</span>',
+      '<span class="value"><%= variety %></span>',
+    '</div>',
+    '<div class="tweet"><%= original.text %></div>',
+  '</section>'
+].join(''));
+
+templates.engagementGroup = _.template([
+  '<section class="engagement-group">',
+    '<div style="background-color:<%= color %>" class="flag"></div>',
+    '<div class="content">',
+      '<div class="score">',
+        '<span class="percent"><%= percent %>%</span>',
+        '<span class="points"><%= score %></span>',
+      '</div>',
+      '<span class="key">Fan Action</span>',
+      '<span class="value"><%= variety %></span>',
+    '</div>',
+  '</section>'
+].join(''));
+
+templates.engagement = _.template([
+  '<section class="engagement">',
+    '<div style="background-color:<%= color %>" class="flag"></div>',
+    '<div class="content">',
+      '<div class="score">',
+        '<span class="percent"><%= percent %>%</span>',
+        '<span class="points"><%= score %></span>',
+      '</div>',
+      '<ul class="user-details">',
+        '<li>',
+          '<span class="key">Who</span>',
+          '<span class="value">',
+            '<a target="blank" href="http://twitter.com/<%= interaction.user.screen_name %>">',
+              '<%= interaction.user.screen_name %>',
+            '</a>',
+          '</span>',
+        '</li>',
+        '<li>',
+          '<span class="key">Followers</span>',
+          '<span class="value"><%= interaction.user.followers_count %></span>',
+        '</li>',
+        '<li>',
+          '<span class="key">Following</span>',
+          '<span class="value"><%= interaction.user.friends_count %></span>',
+        '</li>',
+        '<li>',
+          '<span class="key">Total Statuses</span>',
+          '<span class="value"><%= interaction.user.statuses_count %></span>',
+        '</li>',
+      '</ul>',
+    '</div>',
+    '<div class="tweet"><%= interaction.text %></div>',
+  '</section>'
+].join(''));
 
 templates.key = _.template([
   '<% keys.forEach(function(key){ %>',
@@ -177,91 +276,4 @@ templates.key = _.template([
       '<span class="value"><%= key.value %></span>',
     '</li>',
   '<% }) %>',
-].join(''));
-
-
-templates.breadcrumb = _.template([
-  '<% tree.forEach(function(crumb, i){ %>',
-    '<li style=background-color:rgba(<%= color.join(",") + "," + (tree.length - i)/tree.length %>)>',
-      '<span class="variety"><%= crumb.variety%></span>',
-      '<span class="type"><%= crumb.type%></span>',
-    '</li>',
-  '<% }) %>',
-].join(''));
-
-templates.interaction = _.template([
-  '<header>',
-    '<h3 class="score"><%= Math.round(value*100)/100 %></h3>',
-    '<h2><%= variety %></h2>',
-  '</header>',
-  '<section class="why">',
-    '<p class="tweet"><%= original.text %></p>',
-  '</section>',
-  '<% if(interaction.text){ %>',
-    '<section class="what">',
-      '<p class="tweet"><%= interaction.text %></p>',
-    '</section>',
-  '<% } %>',
-  '<section class="who">',
-    '<ul>',
-      '<li>',
-        '<span class="key">Who:</span>',
-        '<span class="value">',
-          '<a target="blank" href="http://twitter.com/<%= interaction.user.screen_name %>">',
-            '<%= interaction.user.screen_name %>',
-          '</a>',
-        '</span>',
-      '</li>',
-      '<li>',
-        '<span class="key">Followers:</span>',
-        '<span class="value"><%= interaction.user.followers_count %></span>',
-      '</li>',
-      '<li>',
-        '<span class="key">Following:</span>',
-        '<span class="value"><%= interaction.user.friends_count %></span>',
-      '</li>',
-      '<li>',
-        '<span class="key">Total Statuses:</span>',
-        '<span class="value"><%= interaction.user.statuses_count %></span>',
-      '</li>',
-    '</ul>',
-  '</section>',
-].join(''));
-
-
-templates.interactionGroup = _.template([
-  '<header>',
-    '<h3 class="score"><%= Math.round(value*100)/100 %></h3>',
-    '<h2><%= variety %></h2>',
-  '</header>',
-  '<section class="why">',
-    '<p class="tweet"><%= original.text %></p>',
-  '</section>',
-].join(''));
-
-
-templates.tweet = _.template([
-  '<header>',
-    '<h3 class="score"><%= Math.round(value*100)/100 %></h3>',
-    '<h2><%= variety %></h2>',
-  '</header>',
-  '<section class="why">',
-    '<p class="tweet"><%= original.text %></p>',
-  '</section>',
-].join(''));
-
-
-templates.authority = _.template([
-  '<header>',
-    '<h3 class="score"><%= Math.round(value*100)/100 %></h3>',
-    '<h2><%= variety %></h2>',
-  '</header>'
-].join(''));
-
-
-templates.pillar = _.template([
-  '<header>',
-    '<h3 class="score"><%= Math.round(value*100)/100 %></h3>',
-    '<h2><%= variety %></h2>',
-  '</header>'
 ].join(''));
