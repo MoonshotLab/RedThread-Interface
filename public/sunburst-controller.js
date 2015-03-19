@@ -84,9 +84,9 @@ var createDataTree = function(tweets, strategy){
 
 
 $(function(){
-  var $details = $('.drawer').find('.details');
-  var $breadcrumb = $('.drawer').find('.breadcrumb');
 
+  // create a new instance of the sunburst and attach event handlers
+  var $details = $('.drawer').find('.details');
   var sunburst = new Sunburst({
     onHover : function(data){
       if(data.type) $details.html(templates[data.type](data));
@@ -95,11 +95,28 @@ $(function(){
     click : makeBreadcrumb
   });
 
+  // make the key and default it to pillar
   makeKey('pillar');
 
+  // listen for change to the strategy input and make a new key
+  // and redraw the sunburst
+  $('.strategy-input').change(function(){
+    var val = $('input[name=strategy-type]:checked').val();
+    makeKey(val);
+    $('#graphic').html('');
+    sunburst.create({
+      width   : 600,
+      height  : 650,
+      data    : createDataTree(remoteData, val)
+    });
+  });
+
+
+  var remoteData;
   $.ajax({
     url : '/tweets'
   }).done(function(data){
+    remoteData = data;
     sunburst.create({
       width   : 600,
       height  : 650,
@@ -237,7 +254,7 @@ templates.tweet = _.template([
 templates.authority = _.template([
   '<header>',
     '<h3 class="score"><%= Math.round(value*100)/100 %></h3>',
-    '<h2>Authority <span class="small"><%= name %></span></h2>',
+    '<h2><%= variety %></h2>',
   '</header>'
 ].join(''));
 
