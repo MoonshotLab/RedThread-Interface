@@ -11,6 +11,7 @@
   display: inline-block;
   width: 155px;
 }
+
 .drawer h2{
   text-transform: capitalize;
 }
@@ -18,6 +19,35 @@
   float: right;
   padding-top: 4px;
 }
+
+.drawer .controls{
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+.drawer .control{
+  overflow: hidden;
+}
+.drawer .control:last-child{
+  margin-bottom: 0;
+}
+.drawer .control h4{
+  float: left;
+  margin-bottom: 5px;
+}
+.drawer .control form{
+  float: right;
+}
+.drawer .control input{
+  margin-right: 10px;
+}
+.drawer .control label{
+  min-width: 100px;
+}
+.drawer .control label:first-child{
+  min-width: 130px;
+}
+
 path {
   stroke: #202020;
 }

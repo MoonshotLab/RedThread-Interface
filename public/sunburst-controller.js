@@ -90,6 +90,7 @@ $(function(){
   var sunburst = new Sunburst({
     onHover : function(data){
       if(data.type) $details.html(templates[data.type](data));
+      else $details.html('');
     },
     click : makeBreadcrumb
   });

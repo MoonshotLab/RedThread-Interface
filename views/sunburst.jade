@@ -15,3 +15,22 @@ block content
     .drawer
       ul#breadcrumb
       .details
+      .controls
+        section.control
+          h4 Strategy
+          form
+            label
+              input(type='radio', name='strategy-type', value='pillar', checked)
+              | Pillar
+            label
+              input(type='radio', name='strategy-type', value='authority')
+              | Authority
+        section.control
+          h4 Scale By
+          form
+            label
+              input.scale-input(type='radio', name='scale-by', value='influence', checked)
+              | Influence
+            label
+              input.scale-input(type='radio', name='scale-by', value='count')
+              | Count
