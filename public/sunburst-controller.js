@@ -84,11 +84,14 @@ var createDataTree = function(tweets, strategy){
 
 
 $(function(){
-  var $drawer = $('.drawer');
+  var $details = $('.drawer').find('.details');
+  var $breadcrumb = $('.drawer').find('.breadcrumb');
+
   var sunburst = new Sunburst({
     onHover : function(data){
-      if(data.type) $drawer.html(templates[data.type](data));
-    }
+      if(data.type) $details.html(templates[data.type](data));
+    },
+    click : makeBreadcrumb
   });
 
   $.ajax({
@@ -103,7 +106,37 @@ $(function(){
 });
 
 
+var makeBreadcrumb = function(data){
+  var crumbs = { variety : 'default', tree : [] };
+
+  var addToCrumb = function(item){
+    crumbs.tree.push({
+      type    : item.type,
+      variety : item.variety
+    });
+
+    if(item.depth == 1) crumbs.variety = item.variety;
+    if(item.depth > 1) addToCrumb(item.parent);
+  };
+
+  if(data.depth) addToCrumb(data);
+
+  crumbs.color = utils.colorScheme[crumbs.variety];
+  crumbs.tree.reverse();
+  $('#breadcrumb').html(templates.breadcrumb(crumbs));
+};
+
+
 var templates = {};
+
+templates.breadcrumb = _.template([
+  '<% tree.forEach(function(crumb, i){ %>',
+    '<li style=background-color:rgba(<%= color.join(",") + "," + (tree.length - i)/tree.length %>)>',
+      '<span class="variety"><%= crumb.variety%></span>',
+      '<span class="type"><%= crumb.type%></span>',
+    '</li>',
+  '<% }) %>',
+].join(''));
 
 templates.interaction = _.template([
   '<header>',

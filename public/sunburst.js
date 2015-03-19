@@ -1,4 +1,5 @@
-// onHover : the callback for hover events
+// onHover  : callback for hover events
+// click    : callback for click events
 var Sunburst = function(opts){
   var self = this;
 
@@ -92,6 +93,7 @@ Sunburst.prototype.create = function(opts){
   function click(d){
     node = d;
     path.transition().duration(1000).attrTween("d", arcTweenZoom(d));
+    if(self.click) self.click(d);
   }
 
 
