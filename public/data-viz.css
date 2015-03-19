@@ -51,6 +51,7 @@ body{
 }
 .drawer section .content{
   padding: 15px;
+  overflow: hidden;
 }
 
 
@@ -74,7 +75,6 @@ body{
   text-transform: capitalize;
 }
 
-
 .drawer .tweet{
   color: rgba(255,255,255,.5);
   font-style: italic;
@@ -84,6 +84,7 @@ body{
 
 .drawer .score{
   float: right;
+  width: 90px;
 }
 .drawer .score span{
   display: block;
@@ -98,6 +99,14 @@ body{
   list-style-type: none;
   padding: 0;
 }
+.drawer .user-details .value{
+  font-size: 100%;
+  font-weight: bold;
+}
+.drawer .user-details li{
+  margin-bottom: 7px;
+}
+
 
 
 #controls{
@@ -138,4 +147,9 @@ body{
   display: table-cell;
   text-align: center;
   vertical-align: middle;
+}
+
+
+a {
+  color: white;
 }

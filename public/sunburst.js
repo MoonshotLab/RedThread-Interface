@@ -3,6 +3,7 @@
 var Sunburst = function(opts){
   var self = this;
 
+  this.totalSize = 0;
   for(var key in opts){
     self[key] = opts[key];
   }
@@ -85,8 +86,11 @@ Sunburst.prototype.create = function(opts){
   });
 
 
+  this.totalSize = path.node().__data__.value;
+
+
   function mouseover(d){
-    if(self.onHover) self.onHover(d);
+    if(self.onHover) self.onHover(d, self.totalSize);
   }
 
 

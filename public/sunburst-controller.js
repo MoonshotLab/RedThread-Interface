@@ -32,7 +32,7 @@ var createDataTree = function(tweets, strategy){
     });
   });
 
-  // score the entire data tree model
+  // score the data tree model by assiging a score to the final engagement
   dataTree.children.forEach(scoreModel);
   function scoreModel(child){
     if(child.children && child.children.length)
@@ -41,6 +41,16 @@ var createDataTree = function(tweets, strategy){
       var score = calculate.score(child.variety, child.interaction.user);
       child.score = score;
     }
+  }
+
+  // precentify the model by digging for children and recursively counting
+  // their point values
+  dataTree.children.forEach(percentifyModel);
+  function percentifyModel(strategy){
+
+    var calculate = function(){
+
+    };
   }
 
   // create a detailed interaction including the container for the original
@@ -123,12 +133,13 @@ $(function(){
 
 
 
-var buildDrawer = function(data){
+var buildDrawer = function(data, pieSize){
   var html = '';
   var tree = { strategy : null, branches : []};
 
   // recursively add branches to the data tree
   var addToTree = function(branch){
+    var percent = (branch.value/pieSize)*100;
     tree.branches.push({
       type        : branch.type,
       variety     : branch.variety,
@@ -136,7 +147,7 @@ var buildDrawer = function(data){
       original    : branch.original,
       depth       : branch.depth,
       score       : branch.value,
-      percent     : branch.value
+      percent     : Math.round(percent*100)/100
     });
 
     if(branch.depth == 1) tree.strategy = branch.variety;
@@ -197,7 +208,7 @@ templates.strategy = _.template([
     '<div class="content">',
       '<div class="score">',
         '<span class="percent"><%= percent %>%</span>',
-        '<span class="points"><%= score %></span>',
+        '<span class="points"><%= Math.round(score) %></span>',
       '</div>',
       '<span class="key"><%= type %></span>',
       '<span class="value"><%= variety %></span>',
@@ -211,7 +222,7 @@ templates.action = _.template([
     '<div class="content">',
       '<div class="score">',
         '<span class="percent"><%= percent %>%</span>',
-        '<span class="points"><%= score %></span>',
+        '<span class="points"><%= Math.round(score) %></span>',
       '</div>',
       '<span class="key">Brand Action</span>',
       '<span class="value"><%= variety %></span>',
@@ -226,7 +237,7 @@ templates.engagementGroup = _.template([
     '<div class="content">',
       '<div class="score">',
         '<span class="percent"><%= percent %>%</span>',
-        '<span class="points"><%= score %></span>',
+        '<span class="points"><%= Math.round(score * 100) / 100 %></span>',
       '</div>',
       '<span class="key">Fan Action</span>',
       '<span class="value"><%= variety %></span>',
@@ -240,7 +251,7 @@ templates.engagement = _.template([
     '<div class="content">',
       '<div class="score">',
         '<span class="percent"><%= percent %>%</span>',
-        '<span class="points"><%= score %></span>',
+        '<span class="points"><%= Math.round(score * 100) / 100 %></span>',
       '</div>',
       '<ul class="user-details">',
         '<li>',
