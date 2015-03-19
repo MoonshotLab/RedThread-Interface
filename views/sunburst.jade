@@ -10,27 +10,30 @@ block head
 
 block content
   .page-container
+    #controls
+      .control
+        h4 Strategy
+        form
+          label
+            input.strategy-input(type='radio', name='strategy-type', value='pillar', checked)
+            | Pillar
+          label
+            input.strategy-input(type='radio', name='strategy-type', value='authority')
+            | Authority
+      .control
+        h4 Scale By
+        form
+          label
+            input.scale-input(type='radio', name='scale-by', value='influence', checked)
+            | Influence
+          label
+            input.scale-input(type='radio', name='scale-by', value='count')
+            | Count
+
     #key
+
     .graphic-container
       #graphic
+
     .drawer
       .details
-      .controls
-        section.control
-          h4 Strategy
-          form
-            label
-              input.strategy-input(type='radio', name='strategy-type', value='pillar', checked)
-              | Pillar
-            label
-              input.strategy-input(type='radio', name='strategy-type', value='authority')
-              | Authority
-        section.control
-          h4 Scale By
-          form
-            label
-              input.scale-input(type='radio', name='scale-by', value='influence', checked)
-              | Influence
-            label
-              input.scale-input(type='radio', name='scale-by', value='count')
-              | Count

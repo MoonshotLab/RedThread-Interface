@@ -3,6 +3,7 @@ body, html{
   height: 100%;
 }
 body{
+  color: #ecf0f1;
   background: #202020;
 }
 
@@ -25,7 +26,6 @@ body{
 }
 #key li{
   margin: 0;
-  color: #ecf0f1;
 }
 #key .key{
   width: 10px;
@@ -37,14 +37,14 @@ body{
 
 
 .drawer{
-  background: #232323;
-  height: 100%;
+  background: #252525;
   width: 35%;
   position: absolute;
   right: 0;
   top: 0;
-  color: #ecf0f1;
 }
+
+
 .drawer section{
   position: relative;
   border-bottom: 3px solid #202020;
@@ -52,11 +52,15 @@ body{
 .drawer section .content{
   padding: 15px;
 }
+
+
 .drawer .flag{
   position: absolute;
   width: 5px;
   height: 100%;
 }
+
+
 .drawer .key{
   min-width: 130px;
   text-transform: uppercase;
@@ -69,11 +73,15 @@ body{
   display: inline-block;
   text-transform: capitalize;
 }
+
+
 .drawer .tweet{
   color: rgba(255,255,255,.5);
   font-style: italic;
   padding: 0px 15px 15px 145px;
 }
+
+
 .drawer .score{
   float: right;
 }
@@ -84,10 +92,39 @@ body{
   font-weight: bold;
   font-size: 150%;
 }
+
+
 .drawer .user-details{
   list-style-type: none;
   padding: 0;
 }
+
+
+#controls{
+  position: absolute;
+  bottom: 0;
+  background: #252525;
+  width: 100%;
+}
+#controls .control{
+  padding: 10px 15px 15px;
+  display: inline-block;
+  width: 150px;
+  border-right: 3px solid #202020;
+}
+#controls .control h4{
+  margin: 0;
+  font-size: 120%;
+  margin-bottom: 10px;
+}
+#controls .control input{
+  margin-right: 10px;
+}
+#controls .control label{
+  display: block;
+  font-size: 90%;
+}
+
 
 
 
