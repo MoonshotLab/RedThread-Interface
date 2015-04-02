@@ -1,7 +1,6 @@
 extends _layout
 
 block head
-  link(rel='stylesheet', href='/data-viz.css')
   link(rel='stylesheet', href='/sunburst.css')
   script(src='/utils.js')
   script(src='/calculate.js')
@@ -21,14 +20,14 @@ block content
             input.strategy-input(type='radio', name='strategy-type', value='authority')
             | Authority
       .control
-        h4 Scale By
+        h4 View Model
         form
           label
             input.scale-input(type='radio', name='scale-by', value='influence', checked)
-            | Influence
+            | Impact
           label
             input.scale-input(type='radio', name='scale-by', value='count')
-            | Count
+            | Post Frequency
 
     #key
 
