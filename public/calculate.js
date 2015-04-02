@@ -1,5 +1,5 @@
 // pass all of these functions user objects to get a score back
-var calculate = {
+RedThread.calculate = {
 
   score : function(type, user){
     return this[type + 'Score'](user);

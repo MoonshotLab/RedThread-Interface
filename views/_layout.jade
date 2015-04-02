@@ -11,10 +11,13 @@ html
     script(src='/vendor/jquery/dist/jquery.min.js')
     script(src='/vendor/bootstrap/dist/js/bootstrap.min.js')
     script(src='/vendor/d3/d3.min.js')
-    script(src='/tags.js')
 
     script.
+      var RedThread = {};
       var socket = io();
+
+    script(src='/templates.js')
+    script(src='/tags.js')
 
     block head
 
