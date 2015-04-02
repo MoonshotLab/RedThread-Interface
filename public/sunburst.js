@@ -1,6 +1,8 @@
 // onHover  : callback for hover events
 // click    : callback for click events
-var Sunburst = function(opts){
+// width    : the width
+// height   : the height
+RedThread.Sunburst = function(opts){
   var self = this;
 
   this.totalSize = 0;
@@ -13,19 +15,22 @@ var Sunburst = function(opts){
 
 
 
-// width  : the width
-// height : the height
-Sunburst.prototype.create = function(opts){
+
+RedThread.Sunburst.prototype.draw = function(opts){
   var self = this;
-  var radius = Math.min(opts.width, opts.height) / 2;
+  for(var key in opts){
+    self[key] = opts[key];
+  }
+
+  var radius = Math.min(this.width, this.height) / 2;
 
   var x = d3.scale.linear().range([0, 2 * Math.PI]);
   var y = d3.scale.sqrt().range([0, radius]);
 
-  var svgTranslate = 'translate(' + opts.width / 2 + ',' + (opts.height / 2 + 10) + ')';
+  var svgTranslate = 'translate(' + this.width / 2 + ',' + (this.height / 2 + 10) + ')';
   var svg = d3.select('#graphic').append('svg')
-    .attr('width', opts.width)
-    .attr('height', opts.height)
+    .attr('width', this.width)
+    .attr('height', this.height)
     .append('g')
     .attr('transform', svgTranslate);
 
@@ -68,7 +73,7 @@ Sunburst.prototype.create = function(opts){
         strategy = 'default';
       }
 
-      var color = utils.colorScheme[strategy];
+      var color = RedThread.utils.colorScheme[strategy];
       return 'rgba(' + color.join(',') + ', ' + alpha + ')';
     })
     .on('mouseover', mouseover)

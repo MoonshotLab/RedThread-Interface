@@ -1,19 +1,16 @@
-// strategies : { 'celebrate' : [ { date : UTC, score : x }] }
+// data       : min, max, strategies : { 'celebrate' : [ { date : UTC, score : x }] }
 // onChange   : callback after the time selecton has changed
-var TimeSelector = function(opts){
+RedThread.TimeSelector = function(opts){
   var self = this;
-
-  for(var key in opts){
-    self[key] = opts[key];
-  }
+  for(var key in opts){ self[key] = opts[key]; }
 
   return this;
 };
 
 
-TimeSelector.prototype.create = function(){
+RedThread.TimeSelector.prototype.draw = function(opts){
   var self = this;
-  var graphHeight = this.height - 25;
+  for(var key in opts){ self[key] = opts[key]; }
 
   var x = d3.time.scale().range([0, this.width]);
   var y = d3.scale.linear().range([this.height, 0]);
@@ -27,32 +24,31 @@ TimeSelector.prototype.create = function(){
     .append('svg').attr('width', this.width).attr('height', this.height);
   var context = svg.append('g').attr('class', 'context');
 
-  x.domain(d3.extent(self.data.craft.map(function(d)  { return d.date; })));
-  y.domain([0, d3.max(self.data.craft.map(function(d) { return d.score; }))]);
+  x.domain(d3.extent(self.data.dateRange));
+  y.domain([0, self.data.maxScore]);
 
   var line = d3.svg.line()
-    .x(function(d) { console.log(d.date); return x(d.date);  })
+    .x(function(d) { return x(d.date);  })
     .y(function(d) { return y(d.score); });
 
   // draw the graph
-  for(var key in this.data){
+  for(var keyz in this.data.strategies){
     context.append('path')
-      .datum(self.data[key])
-      .attr('class', key)
+      .datum(self.data.strategies[keyz])
+      .attr('class', 'line ' + keyz)
       .attr('d', line);
   }
 
   // draw the x axis
-  context.append("g")
-    .attr("class", "x axis")
-    .attr("transform", "translate(0," + graphHeight + ")")
+  context.append('g')
+    .attr('class', 'x-axis')
     .call(xAxis);
 
-  // darw the brush
-  context.append("g")
-    .attr("class", "x brush")
+  // draw the brush
+  context.append('g')
+    .attr('class', 'brush')
     .call(brush)
-    .selectAll("rect")
-    .attr("y", 0)
-    .attr("height", graphHeight);
+    .selectAll('rect')
+    .attr('y', 0)
+    .attr('height', this.height);
 };
