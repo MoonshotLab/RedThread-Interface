@@ -31,3 +31,7 @@ utils.colorScheme = {
   'play'      : [254, 240, 121],
   'none'      : [118, 250, 254],
 };
+
+
+utils.engagementTypes = ['retweet', 'favorite', 'reply'];
+utils.pluralEngagementTypes = ['retweets', 'replies', 'favorites'];

@@ -43,15 +43,6 @@ var createDataTree = function(tweets, strategy){
     }
   }
 
-  // precentify the model by digging for children and recursively counting
-  // their point values
-  dataTree.children.forEach(percentifyModel);
-  function percentifyModel(strategy){
-
-    var calculate = function(){
-
-    };
-  }
 
   // create a detailed interaction including the container for the original
   // tweet, a breakdown of replies, favorites, and retweets,
@@ -66,24 +57,23 @@ var createDataTree = function(tweets, strategy){
       original    : tweet.original
     };
 
-    var interactionTypes = ['retweet', 'reply', 'favorite'];
-    var pluralInteractionTypes = ['retweets', 'replies', 'favorites'];
-    interactionTypes.forEach(function(interactionType, i){
-      var interactionGroup = {
-        variety       : interactionTypes[i],
+    utils.engagementTypes.forEach(function(engagementType, i){
+      var engagementGroup = {
+        variety       : utils.engagementTypes[i],
         type          : 'engagementGroup',
-        humanVariety  : pluralInteractionTypes[i],
+        humanVariety  : utils.pluralEngagementTypes[i],
         humanType     : 'Engagement Group',
         original      : tweet.original,
         children      : []
       };
-      container.children.push(interactionGroup);
-      tweet[interactionType].forEach(function(interaction){
-        interactionGroup.children.push({
-          variety       : interactionType,
+
+      container.children.push(engagementGroup);
+      tweet[engagementType].forEach(function(engagement){
+        engagementGroup.children.push({
+          variety       : engagementType,
           type          : 'engagement',
           original      : tweet.original,
-          interaction   : interaction
+          interaction   : engagement
         });
       });
     });
@@ -117,17 +107,18 @@ $(function(){
     });
   });
 
-
   var remoteData;
   $.ajax({
     url : '/tweets'
-  }).done(function(data){
-    remoteData = data;
+  }).done(function(tweets){
+    remoteData = tweets;
     sunburst.create({
       width   : 600,
       height  : 650,
-      data    : createDataTree(data, 'pillar')
+      data    : createDataTree(tweets, 'pillar')
     });
+
+    makeTimeSelector(tweets);
   });
 });
 
