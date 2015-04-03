@@ -15,7 +15,8 @@ RedThread.TimeSelector.prototype.draw = function(opts){
   var x = d3.time.scale().range([0, this.width]);
   var y = d3.scale.linear().range([this.height, 0]);
 
-  var xAxis = d3.svg.axis().scale(x).orient('bottom');
+  var xAxis = d3.svg.axis().scale(x).orient('bottom')
+    .tickFormat(d3.time.format('%m/%d'));
   var brush = d3.svg.brush().x(x).on('brush', function(){
     if(self.onChange) self.onChange(brush.extent());
   });
@@ -36,12 +37,15 @@ RedThread.TimeSelector.prototype.draw = function(opts){
     context.append('path')
       .datum(self.data.strategies[keyz])
       .attr('class', 'line ' + keyz)
+      .attr('transform', 'translate(0, -25)')
       .attr('d', line);
   }
 
   // draw the x axis
+  var xAxisOffset = this.height - 25;
   context.append('g')
     .attr('class', 'x-axis')
+    .attr('transform', 'translate(0, ' + xAxisOffset + ')')
     .call(xAxis);
 
   // draw the brush
@@ -50,5 +54,5 @@ RedThread.TimeSelector.prototype.draw = function(opts){
     .call(brush)
     .selectAll('rect')
     .attr('y', 0)
-    .attr('height', this.height);
+    .attr('height', this.height - 25);
 };

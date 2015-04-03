@@ -56,17 +56,19 @@ $(function(){
 
   // create a new instance of the sunburst and attach event handlers
   var sunburst = new RedThread.Sunburst({
-    width     : 600,
-    height    : 650,
+    width     : $('body').width()/2.5,
+    height    : $('body').width()/2.5 + 50,
     selector  : '#graphic',
     onHover   : RedThread.page.buildDrawer
   });
 
   // create a new instance of the time selector and attach event handlers
+  var timeSelectorWidth = ($('body').width() -
+    $('#controls').find('.control').width()*2);
   var timeSelector = new RedThread.TimeSelector({
-    width     : 1380,
-    height    : 75,
-    selector  : '.time-selector',
+    width     : timeSelectorWidth,
+    height    : $('#controls').height(),
+    selector  : '#time-selector',
     onChange  : function(data){
       console.log(data);
     }

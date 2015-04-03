@@ -14,11 +14,15 @@ path {
   stroke: #202020;
 }
 
+
+
 .page-container{
   position: relative;
   width: 100%;
   height: 100%;
 }
+
+
 
 
 #nav{
@@ -51,4 +55,96 @@ path {
   border-right: 2px solid #363636;
   background-color: #363636;
   display: block;
+}
+
+
+
+
+#key{
+  list-style-type: none;
+  position: absolute;
+  padding: 5px 25px 10px 10px;
+  top: 15%;
+  background: #252525;
+  font-size: 90%;
+}
+#key li{
+  padding-top: 5px;
+}
+#key .key{
+  width: 10px;
+  height: 10px;
+  margin-right: 5px;
+  display: inline-block;
+}
+
+
+
+
+#time-selector{
+  display: inline-block;
+  position: absolute;
+  bottom: 0;
+  height: 105px;
+}
+#time-selector text{
+  font-size: 80%;
+}
+#time-selector svg{
+  position: absolute;
+  bottom: 0;
+}
+#time-selector path           { stroke-width: 2px;            }
+#time-selector path.none      { stroke : rgb(118, 250, 254);  }
+#time-selector path.create    { stroke : rgb(254, 240, 121);  }
+#time-selector path.music     { stroke : rgb(252, 71, 195);   }
+#time-selector path.celebrate { stroke : rgb(76, 253, 89);    }
+#time-selector path.style     { stroke : rgb(191, 74, 251);   }
+#time-selector path.crew      { stroke : rgb(114, 164, 252);  }
+#time-selector path.craft     { stroke : rgb(76, 253, 89);    }
+#time-selector path.inspire   { stroke : rgb(191, 74, 251);   }
+#time-selector path.play      { stroke : rgb(254, 240, 121);  }
+#time-selector path.discover  { stroke : rgb(252, 71, 195);   }
+#time-selector text{
+  fill: #ecf0f1;
+}
+#time-selector .brush{
+  fill: rgba(255,255,255,.15);
+}
+#time-selector path{
+  stroke: #ecf0f1;
+  fill: none;
+}
+#time-selector path.domain {
+  stroke: rgba(255,255,255,.25);
+}
+
+
+
+
+#controls{
+  position: absolute;
+  bottom: 0;
+  background: #252525;
+  width: 100%;
+  height: 105px;
+}
+#controls .control{
+  padding: 10px 15px 15px;
+  display: inline-block;
+  width: 150px;
+  border-right: 3px solid #202020;
+}
+#controls .control h4{
+  margin: 0;
+  font-size: 120%;
+  margin-bottom: 10px;
+}
+#controls .control input{
+  margin-right: 10px;
+}
+#controls .control label{
+  display: block;
+  font-size: 90%;
+  padding-top: 10px;
 }
