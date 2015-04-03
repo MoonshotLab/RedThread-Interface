@@ -31,7 +31,7 @@ RedThread.page.scoreStrategies = function(tweets){
     // create the container if it doesn't already exist
     if(!returned.strategies[strategyName]) returned.strategies[strategyName] = [];
 
-    //
+    // look for an object with a matching date, if none found, add it
     var foundDateScore = _.findWhere(returned.strategies[strategyName],
       { dateString : dateString });
     if(foundDateScore) foundDateScore.score += score;
