@@ -50,9 +50,6 @@ RedThread.utils.createNestedDataTreeFromTweets = function(tweets, strategy){
     });
   });
 
-  // tweets can comeback from the server a little bit incomplete
-  tweets.forEach(RedThread.utils.normalizeTweet);
-
   // loop over each tweet creating the complete interaction. then apply
   // the interaction to the dataTree strategy
   tweets.forEach(function(tweet){
@@ -131,6 +128,72 @@ RedThread.utils.makeKey = function(strategy){
   });
 
   $('#key').html(RedThread.templates.key({ keys : keys }));
+};
+
+
+
+// pass in a set of tweets and a list of scored strategies will be returned
+// as well as min and max values for data and score
+RedThread.utils.scoreStrategies = function(tweets){
+  var returned  = { strategies : [], dateRange : [], maxScore : 0 };
+  var parseDate = d3.time.format('%d-%m-%Y').parse;
+
+  var scoreStrategy = function(strategyName, tweet){
+    // loop over the engagement types and score each engagement for either
+    // the pillar or authority
+    var score = 0;
+    RedThread.utils.engagementTypes.forEach(function(engagementType){
+      if(tweet[engagementType]){
+        tweet[engagementType].forEach(function(engagement){
+          score += RedThread.calculate.score(engagementType, engagement.user);
+        });
+      }
+    });
+
+    // fancy date formatting
+    var timestamp   = tweet._id.toString().substring(0,8);
+    var dateTime    = new Date( parseInt( timestamp, 16 ) * 1000 );
+    var dateString  = [
+      dateTime.getDay() + 1,
+      dateTime.getMonth() + 1,
+      dateTime.getFullYear()
+    ].join('-');
+    var parsedDate  = parseDate(dateString);
+
+    // create the container if it doesn't already exist
+    if(!returned.strategies[strategyName]) returned.strategies[strategyName] = [];
+
+    // look for an object with a matching date, if none found, add it
+    var foundDateScore = _.findWhere(returned.strategies[strategyName],
+      { dateString : dateString });
+    if(foundDateScore) foundDateScore.score += score;
+    else {
+      returned.strategies[strategyName].push({
+        dateString  : dateString,
+        date        : parsedDate,
+        score       : score
+      });
+    }
+
+    // update the max score if needed
+    if(score > returned.maxScore) returned.maxScore = score;
+
+    // append the date object if not contained
+    if(returned.dateRange.indexOf(parsedDate) == -1)
+      returned.dateRange.push(parsedDate);
+  };
+
+  // loop over the tweets, scoring the pillars and authorities
+  tweets.forEach(function(tweet){
+    tweet.pillar.forEach(function(pillarName){
+      scoreStrategy(pillarName, tweet);
+    });
+    tweet.authority.forEach(function(authorityName){
+      scoreStrategy(authorityName, tweet);
+    });
+  });
+
+  return returned;
 };
 
 
