@@ -1,6 +1,7 @@
 extends _layout
 
 block head
+  link(rel='stylesheet', href='/data-viz.css')
   link(rel='stylesheet', href='/sunburst.css')
 
   script(src='/templates.js')
@@ -12,6 +13,13 @@ block head
 
 block content
   .page-container
+    #nav
+      ul
+        li.active
+          a(href='/sunburst') Sunburst
+        li
+          a(href='/line-graph') Line Graph
+
     #controls
       .control
         h4 Strategy
