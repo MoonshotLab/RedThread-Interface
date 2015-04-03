@@ -1,0 +1,24 @@
+extends _layout
+
+block head
+  link(rel='stylesheet', href='/data-viz.css')
+  link(rel='stylesheet', href='/line-graph.css')
+
+  script(src='/templates.js')
+  script(src='/utils.js')
+  script(src='/calculate.js')
+  script(src='/time-selector.js')
+  script(src='/line-graph.js')
+  script(src='/line-graph-controller.js')
+
+block content
+  .page-container
+    #nav
+      ul
+        li
+          a(href='/sunburst') Sunburst
+        li.active
+          a(href='/line-graph') Line Graph
+
+    .graphic-container
+      #graphic.line-graph

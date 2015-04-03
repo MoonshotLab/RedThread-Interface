@@ -35,6 +35,10 @@ app.get('/sunburst', function(req ,res){
   res.render('sunburst');
 });
 
+app.get('/line-graph', function(req ,res){
+  res.render('line-graph');
+});
+
 
 var io = require('socket.io')(server);
 

@@ -1,0 +1,30 @@
+.line-graph{
+  position: absolute;
+  bottom: 0;
+}
+.line-graph svg{
+  position: absolute;
+  bottom: 0;
+}
+
+.line-graph path           { stroke-width: 4px;            }
+.line-graph path.none      { stroke : rgb(118, 250, 254);  }
+.line-graph path.create    { stroke : rgb(254, 240, 121);  }
+.line-graph path.music     { stroke : rgb(252, 71, 195);   }
+.line-graph path.celebrate { stroke : rgb(76, 253, 89);    }
+.line-graph path.style     { stroke : rgb(191, 74, 251);   }
+.line-graph path.crew      { stroke : rgb(114, 164, 252);  }
+.line-graph path.craft     { stroke : rgb(76, 253, 89);    }
+.line-graph path.inspire   { stroke : rgb(191, 74, 251);   }
+.line-graph path.play      { stroke : rgb(254, 240, 121);  }
+.line-graph path.discover  { stroke : rgb(252, 71, 195);   }
+.line-graph text{
+  fill: #ecf0f1;
+}
+.line-graph path{
+  stroke: #ecf0f1;
+  fill: none;
+}
+.line-graph path.domain {
+  stroke: rgba(255,255,255,.25);
+}
