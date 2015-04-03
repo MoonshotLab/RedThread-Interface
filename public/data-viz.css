@@ -23,7 +23,6 @@ path {
 
 #nav{
   border-bottom: 2px solid #363636;
-  display: inline-block;
 }
 #nav ul{
   margin: 0;
@@ -49,6 +48,7 @@ path {
   text-decoration: none;
   padding: 20px;
   border-left: 2px solid #363636;
+  border-right: 2px solid #363636;
   background-color: #363636;
   display: block;
 }

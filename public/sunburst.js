@@ -28,7 +28,7 @@ RedThread.Sunburst.prototype.draw = function(opts){
   var y = d3.scale.sqrt().range([0, radius]);
 
   var svgTranslate = 'translate(' + this.width / 2 + ',' + (this.height / 2 + 10) + ')';
-  var svg = d3.select('#graphic').append('svg')
+  var svg = d3.select(this.selector).append('svg')
     .attr('width', this.width)
     .attr('height', this.height)
     .append('g')

@@ -20,7 +20,7 @@ RedThread.TimeSelector.prototype.draw = function(opts){
     if(self.onChange) self.onChange(brush.extent());
   });
 
-  var svg = d3.select('.time-selector')
+  var svg = d3.select(this.selector)
     .append('svg').attr('width', this.width).attr('height', this.height);
   var context = svg.append('g').attr('class', 'context');
 

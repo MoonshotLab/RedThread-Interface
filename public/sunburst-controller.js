@@ -58,6 +58,7 @@ $(function(){
   var sunburst = new RedThread.Sunburst({
     width     : 600,
     height    : 650,
+    selector  : '#graphic',
     onHover   : RedThread.page.buildDrawer
   });
 
@@ -65,6 +66,7 @@ $(function(){
   var timeSelector = new RedThread.TimeSelector({
     width     : 1380,
     height    : 75,
+    selector  : '.time-selector',
     onChange  : function(data){
       console.log(data);
     }
