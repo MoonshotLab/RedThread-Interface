@@ -1,5 +1,4 @@
 // data       : min, max, strategies : { 'celebrate' : [ { date : UTC, score : x }] }
-// onChange   : callback after the time selecton has changed
 RedThread.LineGraph = function(opts){
   var self = this;
   for(var key in opts){ self[key] = opts[key]; }
@@ -15,7 +14,8 @@ RedThread.LineGraph.prototype.draw = function(opts){
   var x = d3.time.scale().range([0, this.width]);
   var y = d3.scale.linear().range([this.height, 0]);
 
-  var xAxis = d3.svg.axis().scale(x).orient('bottom');
+  var xAxis = d3.svg.axis().scale(x).orient('bottom')
+    .tickFormat(d3.time.format('%m/%d'));
 
   var svg = d3.select(this.selector)
     .append('svg').attr('width', this.width).attr('height', this.height);
@@ -34,7 +34,7 @@ RedThread.LineGraph.prototype.draw = function(opts){
       .datum(self.data.strategies[keyz])
       .attr('class', 'line ' + keyz)
       .attr('d', line)
-      // .attr('transform', 'translate(0, -25)');
+      .attr('transform', 'translate(0, -25)');
   }
 
   // draw the x axis

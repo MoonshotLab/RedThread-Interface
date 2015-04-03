@@ -20,5 +20,29 @@ block content
         li.active
           a(href='/line-graph') Line Graph
 
-    .graphic-container
-      #graphic.line-graph
+    #controls
+      .control
+        h4 Strategy
+        form
+          label
+            input.strategy-input(type='checkbox', name='strategy-type', value='pillar', checked)
+            | Pillar
+          label
+            input.strategy-input(type='checkbox', name='strategy-type', value='authority')
+            | Authority
+      .control
+        h4 View Model
+        form
+          label
+            input.scale-input(type='radio', name='scale-by', value='influence', checked)
+            | Impact
+          label
+            input.scale-input(type='radio', name='scale-by', value='count')
+            | Post Frequency
+      #time-selector
+
+    #key
+
+    #graphic.line-graph
+
+    #time-selector
