@@ -101,6 +101,8 @@ RedThread.templates.key = _.template([
 RedThread.templates.engagement = _.template([
   '<li id="tweet-<%= tweet._id %>" class="tweet">',
 
+    '<div class="date"><%= date %></div>',
+
     '<div class="scores">',
       '<div class="score total"><%= Math.round(score.total) %></div>',
       '<div class="score retweet"><i class="fa fa-retweet"></i><%= Math.round(score.retweet) %></div>',

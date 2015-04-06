@@ -22,8 +22,11 @@ $(function(){
 
   RedThread.page.tweets.forEach(function(tweet){
     RedThread.utils.normalizeTweet(tweet);
-    
+
+    var date = new Date(tweet.original.created_at);
+    var formattedDate = (date.getMonth() + 1) + '/' + date.getDate();
     $engagements.append(RedThread.templates.engagement({
+      date        : formattedDate,
       tweet       : tweet,
       authorities : RedThread.utils.strategies.authority,
       pillars     : RedThread.utils.strategies.pillar,
