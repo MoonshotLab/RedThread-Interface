@@ -64,7 +64,7 @@ $(function(){
 
   // create a new instance of the time selector and attach event handlers
   var timeSelectorWidth = ($('body').width() -
-    $('#controls').find('.control').width()*2);
+    $('#controls').find('.control').outerWidth()*2);
   var timeSelector = new RedThread.TimeSelector({
     width     : timeSelectorWidth,
     height    : $('#controls').height(),
