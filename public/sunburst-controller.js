@@ -40,7 +40,7 @@ RedThread.page.buildDrawer = function(data, pieSize){
       ')'
     ].join('');
 
-    html += RedThread.templates[branch.type](branch);
+    html += RedThread.templates.drawer[branch.type](branch);
   });
 
   $('.drawer').find('.details').html(html);

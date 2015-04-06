@@ -81,9 +81,10 @@
 .graphic-container{
   width: 65%;
   display: table;
-  height: 85%;
+  height: 90%;
 }
 #graphic{
+  display: table-cell;
   text-align: center;
   vertical-align: middle;
 }

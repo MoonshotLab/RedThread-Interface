@@ -26,17 +26,12 @@ path {
 
 
 #nav{
+  position: fixed;
+  z-index: 2;
+  top: 0;
+  width: 100%;
   background: black;
   border-bottom: 1px solid #363636;
-  box-shadow: 1px 1px 3px rgba(0,0,0,.8);
-}
-#nav .descriptor{
-  float: left;
-  font-size: 80%;
-  font-weight: bold;
-  padding: 20px 25px 0;
-  margin: 0;
-  opacity: .8;
 }
 #nav ul{
   margin: 0;
@@ -45,17 +40,26 @@ path {
 #nav li:first-child{
   margin-left: 150px;
 }
+#nav li.active:first-child{
+  border-right: 1px solid #404040;
+}
+#nav li.active:last-child{
+  border-left: 1px solid #404040;
+}
 #nav li{
   list-style-type: none;
   margin: 0;
   display: inline-block;
   font-weight: bold;
-  border-left: 1px solid #363636;
-  border-right: 1px solid #363636;
-  background-color: #363636;
+  font-size: 90%;
+  background-color: #2B2B2B;
+  border-left: 1px solid black;
+  text-shadow: 0 1px black;
 }
 #nav li.active{
   background: #202020;
+  border-left: 1px solid #404040;
+  border-right: 1px solid #404040;
 }
 #nav li.active a{
   background: #202020;
@@ -134,7 +138,9 @@ path {
 
 
 #controls{
-  position: absolute;
+  border-top: 1px solid #363636;
+  box-shadow: -1px 1px 3px rgba(0,0,0,.8);
+  position: fixed;
   bottom: 0;
   background: #252525;
   width: 100%;
@@ -144,7 +150,7 @@ path {
   padding: 10px 15px 15px;
   display: inline-block;
   width: 150px;
-  border-right: 3px solid #202020;
+  border-right: 1px solid #363636;
 }
 #controls .control h4{
   margin: 0;

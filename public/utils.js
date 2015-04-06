@@ -132,6 +132,26 @@ RedThread.utils.makeKey = function(strategy){
 
 
 
+// score the individaul tweet and pass back the total, as well as values
+// for grouped fan interactions
+RedThread.utils.scoreTweet = function(tweet){
+  var score = { total : 0 };
+
+  RedThread.utils.engagementTypes.forEach(function(engagementType){
+    score[engagementType] = 0;
+
+    tweet[engagementType].forEach(function(engagement){
+      score[engagementType] += RedThread.calculate.score(engagementType, engagement.user);
+    });
+
+    score.total += score[engagementType];
+  });
+
+  return score;
+};
+
+
+
 // pass in a set of tweets and a list of scored strategies will be returned
 // as well as min and max values for data and score
 RedThread.utils.scoreStrategies = function(tweets){
@@ -201,6 +221,6 @@ RedThread.utils.scoreStrategies = function(tweets){
 RedThread.utils.engagementTypes = ['retweet', 'favorite', 'reply'];
 RedThread.utils.pluralEngagementTypes = ['retweets', 'replies', 'favorites'];
 RedThread.utils.strategies = {
-  pillar    : ['celebrate', 'inspire', 'discover', 'create', 'none'],
-  authority : ['crew', 'craft', 'style', 'music', 'play', 'none']
+  pillar    : ['celebrate', 'inspire', 'discover', 'create'],
+  authority : ['crew', 'craft', 'style', 'music', 'play']
 };

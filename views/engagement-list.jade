@@ -1,0 +1,41 @@
+extends _layout
+
+block head
+  link(rel='stylesheet', href='/data-viz.css')
+  link(rel='stylesheet', href='/engagement-list.css')
+
+  script.
+    RedThread.page = {};
+    RedThread.page.tweets = !{JSON.stringify(tweets)}
+
+  script(src='/templates.js')
+  script(src='/utils.js')
+  script(src='/calculate.js')
+  script(src='/engagement-list.js')
+
+block content
+  .page-container
+    #nav
+      ul
+        li
+          a(href='/sunburst') Deep Dive
+        li
+          a(href='/line-graph') Overview
+        li.active
+          a(href='/engagement-list') Specifics
+
+    #controls
+      .control
+        h4 Show
+        form
+          label
+            input.strategy-input(type='checkbox', name='control', value='strategies', checked)
+            | Stragegies
+          label
+            input.strategy-input(type='checkbox', name='control', value='twitter-stats')
+            | Twitter Stats
+          label
+            input.strategy-input(type='checkbox', name='control', value='scores', checked)
+            | Scored Model
+    
+    ul#engagements

@@ -39,6 +39,12 @@ app.get('/line-graph', function(req ,res){
   res.render('line-graph');
 });
 
+app.get('/engagement-list', function(req ,res){
+  db.getMany('tweets').then(function(tweets){
+    res.render('engagement-list', { tweets : tweets });
+  });
+});
+
 
 var io = require('socket.io')(server);
 
