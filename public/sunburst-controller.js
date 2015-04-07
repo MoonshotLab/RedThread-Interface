@@ -50,9 +50,18 @@ RedThread.page.buildDrawer = function(data, pieSize){
 
 
 $(function(){
+  // what strategy and view model are we going to start working with?
+  var strategy  = $('input[name=strategy-type]:checked').val();
+  var viewModel = $('input[name=model-by]:checked').val();
+
+
+  // make the key and default it to the selected strategy
+  RedThread.utils.makeKey(strategy);
+
 
   // create a container for the remote data
   var tweets = null;
+
 
   // create a new instance of the sunburst and attach event handlers
   var sunburst = new RedThread.Sunburst({
@@ -61,6 +70,7 @@ $(function(){
     selector  : '#graphic',
     onHover   : RedThread.page.buildDrawer
   });
+
 
   // create a new instance of the time selector and attach event handlers
   var timeSelectorWidth = ($('body').width() -
@@ -74,19 +84,26 @@ $(function(){
     }
   });
 
-  // make the key and default it to pillar
-  RedThread.utils.makeKey('pillar');
 
   // listen for change to the strategy input, make a new key
   // and redraw the sunburst
   $('.strategy-input').change(function(){
-    var val = $('input[name=strategy-type]:checked').val();
-    RedThread.utils.makeKey(val);
+    strategy = $('input[name=strategy-type]:checked').val();
+    RedThread.utils.makeKey(strategy);
     $('#graphic').html('');
+
     sunburst.draw({
-      data : RedThread.utils.createNestedDataTreeFromTweets(tweets, val)
+      data : RedThread.utils.createNestedDataTreeFromTweets(tweets, strategy)
     });
   });
+
+
+  // listen for changes to the view model input
+  $('.view-model-input').change(function(){
+    viewModel = $('input[name=model-by]:checked').val();
+    sunburst.updateViewModel(viewModel);
+  });
+
 
   // fetch the remote tweet data
   $.ajax({
@@ -99,7 +116,8 @@ $(function(){
 
     // draw the sunburst and time selectors
     sunburst.draw({
-      data : RedThread.utils.createNestedDataTreeFromTweets(tweets, 'pillar')
+      data      : RedThread.utils.createNestedDataTreeFromTweets(tweets, strategy),
+      viewModel : viewModel
     });
     timeSelector.draw({
       data : RedThread.utils.scoreStrategies(tweets)

@@ -15,6 +15,17 @@ RedThread.Sunburst = function(opts){
 
 
 
+RedThread.Sunburst.prototype.updateViewModel = function(type){
+  var value = type === "count" ? function() { return 1; } : function(d) { return d.score; };
+  this.viewModel = type;
+
+  this.path.data(this.partition.value(value).nodes)
+    .transition()
+    .duration(500)
+    .attrTween('d', this.arcTweenData);
+};
+
+
 
 RedThread.Sunburst.prototype.draw = function(opts){
   var self = this;
@@ -34,7 +45,7 @@ RedThread.Sunburst.prototype.draw = function(opts){
     .append('g')
     .attr('transform', svgTranslate);
 
-  var partition = d3.layout.partition()
+  this.partition = d3.layout.partition()
     .sort(null)
     .value(function(d) { return 1; });
 
@@ -45,9 +56,14 @@ RedThread.Sunburst.prototype.draw = function(opts){
     .outerRadius(function(d)  { return Math.max(0, y(d.y + d.dy)); });
 
 
+  var scoreModel = function(d){ return d.score; };
+  if(this.viewModel == 'count')
+    scoreModel = function() { return 1; };
+
+
   var node = opts.data;
-  var path = svg.datum(node).selectAll('path')
-    .data(partition.value(function(d) { return d.score; }).nodes)
+  this.path = svg.datum(node).selectAll('path')
+    .data(this.partition.value(scoreModel).nodes)
     .enter()
     .append('path')
     .attr('d', arc)
@@ -80,18 +96,7 @@ RedThread.Sunburst.prototype.draw = function(opts){
     .on('click', click).each(stash);
 
 
-  // view the data by count or score
-  d3.selectAll('.scale-input').on('change', function change() {
-    var value = this.value === "count" ? function() { return 1; } : function(d) { return d.score; };
-
-    path.data(partition.value(value).nodes)
-      .transition()
-      .duration(1000)
-      .attrTween('d', arcTweenData);
-  });
-
-
-  this.totalSize = path.node().__data__.value;
+  this.totalSize = this.path.node().__data__.value;
 
 
   function mouseover(d){
@@ -101,7 +106,7 @@ RedThread.Sunburst.prototype.draw = function(opts){
 
   function click(d){
     node = d;
-    path.transition().duration(1000).attrTween("d", arcTweenZoom(d));
+    this.path.transition().duration(1000).attrTween("d", arcTweenZoom(d));
     if(self.click) self.click(d);
   }
 
@@ -117,7 +122,7 @@ RedThread.Sunburst.prototype.draw = function(opts){
 
 
   // When switching data: interpolate the arcs in data space.
-  function arcTweenData(a, i) {
+  this.arcTweenData = function(a, i) {
     var oi = d3.interpolate({x: a.x0, dx: a.dx0}, a);
     function tween(t) {
       var b = oi(t);
@@ -136,7 +141,7 @@ RedThread.Sunburst.prototype.draw = function(opts){
     } else {
       return tween;
     }
-  }
+  };
 
 
   // When zooming: interpolate the scales.
