@@ -47,12 +47,13 @@ RedThread.utils.createNestedDataTreeFromTweets = function(tweets, strategy){
   });
 
   // loop over each tweet creating the complete interaction. then apply
-  // the interaction to the dataTree strategy
+  // the interaction to the dataTree strategy. CLONE!
   tweets.forEach(function(tweet){
     var interaction = buildInteraction(tweet);
+
     interaction.strategies.forEach(function(interactionStrategy){
-      _.findWhere(dataTree.children, { variety : interactionStrategy })
-        .children.push(interaction);
+      var container = _.findWhere(dataTree.children, { variety : interactionStrategy });
+      container.children.push(_.cloneDeep(interaction));
     });
   });
 
@@ -72,10 +73,9 @@ RedThread.utils.createNestedDataTreeFromTweets = function(tweets, strategy){
   // tweet, a breakdown of replies, favorites, and retweets,
   // and the eventual user engagement
   function buildInteraction(tweet){
-    var tweetType = tweet.original.in_reply_to_status_id !== null ? 'reply' : 'tweet';
     var container = {
       strategies  : tweet[strategy],
-      variety     : tweetType,
+      variety     : 'tweet',
       type        : 'action',
       children    : [],
       original    : tweet.original
@@ -260,7 +260,7 @@ RedThread.utils.scoreStrategies = function(tweets, strategy){
 RedThread.utils.months = ['January', 'February', 'March', 'April', 'May',
   'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 RedThread.utils.engagementTypes = ['retweet', 'favorite', 'reply'];
-RedThread.utils.pluralEngagementTypes = ['retweets', 'replies', 'favorites'];
+RedThread.utils.pluralEngagementTypes = ['retweets', 'favorites', 'replies'];
 RedThread.utils.strategies = {
   pillar    : ['celebrate', 'inspire', 'discover', 'create'],
   authority : ['crew', 'craft', 'style', 'music', 'play']
