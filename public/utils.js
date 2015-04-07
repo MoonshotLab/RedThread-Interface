@@ -10,9 +10,6 @@ RedThread.utils.normalizeTweet = function(tweet){
   if(!tweet.reply)      tweet.reply     = [];
   if(!tweet.favorite)   tweet.favorite  = [];
 
-  if(!tweet.pillar.length)    tweet.pillar = ['none'];
-  if(!tweet.authority.length) tweet.authority = ['none'];
-
   return tweet;
 };
 
@@ -28,8 +25,7 @@ RedThread.utils.colorScheme = {
   'craft'     : [76, 253, 89],
   'style'     : [191, 74, 251],
   'music'     : [252, 71, 195],
-  'play'      : [254, 240, 121],
-  'none'      : [118, 250, 254],
+  'play'      : [254, 240, 121]
 };
 
 
