@@ -179,9 +179,10 @@ RedThread.utils.getTopEngagements = function(tweet, count){
 
 
 
-// pass in a set of tweets and a list of scored strategies will be returned
-// as well as min and max values for data and score. Optionally pass a strategy
-// if you only want that strategy to get scored
+// pass in a set of tweets and optionally a strategy if you'd like a limited
+// result set.
+// returns a list of scored strategies, min and max values for date, and
+// the score.
 RedThread.utils.scoreStrategies = function(tweets, strategy){
   var returned  = { strategies : [], dateRange : [], maxScore : 0 };
   var parseDate = d3.time.format('%d-%m-%Y').parse;
@@ -199,10 +200,10 @@ RedThread.utils.scoreStrategies = function(tweets, strategy){
     });
 
     // fancy date formatting
-    var timestamp   = tweet._id.toString().substring(0,8);
-    var dateTime    = new Date( parseInt( timestamp, 16 ) * 1000 );
+    var timeSub     = tweet._id.toString().substring(0,8);
+    var dateTime    = new Date(parseInt(timeSub, 16)* 1000);
     var dateString  = [
-      dateTime.getDay() + 1,
+      dateTime.getDate() + 1,
       dateTime.getMonth() + 1,
       dateTime.getFullYear()
     ].join('-');
@@ -214,6 +215,7 @@ RedThread.utils.scoreStrategies = function(tweets, strategy){
     // look for an object with a matching date, if none found, add it
     var foundDateScore = _.findWhere(returned.strategies[strategyName],
       { dateString : dateString });
+
     if(foundDateScore) foundDateScore.score += score;
     else {
       returned.strategies[strategyName].push({

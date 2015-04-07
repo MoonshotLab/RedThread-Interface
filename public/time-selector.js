@@ -28,15 +28,18 @@ RedThread.TimeSelector.prototype.draw = function(opts){
   x.domain(d3.extent(self.data.dateRange));
   y.domain([0, self.data.maxScore]);
 
+  fillInBlankDates(this.data.strategies);
+
   var line = d3.svg.line()
     .x(function(d) { return x(d.date);  })
     .y(function(d) { return y(d.score); });
 
   // draw the graph
-  for(var keyz in this.data.strategies){
+  for(var name in this.data.strategies){
+    this.data.strategies[name] = _.sortBy(this.data.strategies[name], 'date');
     context.append('path')
-      .datum(self.data.strategies[keyz])
-      .attr('class', 'line ' + keyz)
+      .datum(self.data.strategies[name])
+      .attr('class', 'line ' + name)
       .attr('transform', 'translate(0, -25)')
       .attr('d', line);
   }
@@ -55,4 +58,30 @@ RedThread.TimeSelector.prototype.draw = function(opts){
     .selectAll('rect')
     .attr('y', 0)
     .attr('height', this.height - 25);
+
+
+  // when the dates get passed they can have a lot of dates where no score
+  // is calculated. This takes each day and ensures there's a score of zero
+  // at every day
+  function fillInBlankDates(strategies){
+    var domain = x.domain();
+    var format = d3.time.format('%d-%m-%Y');
+    var maxDay = new Date(domain[1]);
+
+    maxDay.setDate(maxDay.getDate() + 1);
+    var days = d3.time.days(domain[0], maxDay);
+
+    for(var key in strategies){
+      days.forEach(function(day){
+        var match = _.findWhere(strategies[key], { date : day });
+        if(!match){
+          strategies[key].push({
+            date        : day,
+            dateString  : format(day),
+            score       : 0
+          });
+        }
+      });
+    }
+  }
 };

@@ -76,6 +76,7 @@ path {
 
 
 #key{
+  z-index: 2;
   list-style-type: none;
   position: absolute;
   padding: 5px 25px 10px 10px;

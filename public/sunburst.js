@@ -106,7 +106,7 @@ RedThread.Sunburst.prototype.draw = function(opts){
 
   function click(d){
     node = d;
-    this.path.transition().duration(1000).attrTween("d", arcTweenZoom(d));
+    self.path.transition().duration(1000).attrTween("d", arcTweenZoom(d));
     if(self.click) self.click(d);
   }
 
