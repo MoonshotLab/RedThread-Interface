@@ -16,19 +16,13 @@ server.listen(port, function(){
 
 
 app.get('/', function(req ,res){
-  db.getMany('tweets').then(function(tweets){
-    res.render('tag-posts', { tweets : tweets });
-  });
+  res.redirect('/engagement-list');
 });
 
 app.get('/tweets', function(req, res){
   db.getMany('tweets').then(function(tweets){
     res.send(tweets);
   });
-});
-
-app.get('/tag-posts', function(req ,res){
-  res.render('tag-posts');
 });
 
 app.get('/sunburst', function(req ,res){

@@ -152,6 +152,34 @@ RedThread.utils.scoreTweet = function(tweet){
 
 
 
+// get the engagements with the highest scores, adds the score to EVERY
+// engagement it looks at. Count i s the number of engagements to
+// collect
+RedThread.utils.getTopEngagements = function(tweet, count){
+  var topEngagements = [];
+
+  RedThread.utils.engagementTypes.forEach(function(engagementType){
+    tweet[engagementType].forEach(function(engagement){
+      engagement.score = RedThread.calculate.score(engagementType, engagement.user);
+      engagement.type = engagementType;
+
+      if(topEngagements.length < count) topEngagements.push(engagement);
+      else{
+        topEngagements = _.sortBy(topEngagements, 'score').reverse();
+        console.log(_.pluck(topEngagements, 'score'));
+        if(topEngagements[count - 1].score < engagement.score){
+          topEngagements.pop();
+          topEngagements.push(engagement);
+        }
+      }
+    });
+  });
+
+  return topEngagements;
+};
+
+
+
 // pass in a set of tweets and a list of scored strategies will be returned
 // as well as min and max values for data and score
 RedThread.utils.scoreStrategies = function(tweets){
@@ -217,7 +245,8 @@ RedThread.utils.scoreStrategies = function(tweets){
 };
 
 
-
+RedThread.utils.months = ['January', 'February', 'March', 'April', 'May',
+  'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 RedThread.utils.engagementTypes = ['retweet', 'favorite', 'reply'];
 RedThread.utils.pluralEngagementTypes = ['retweets', 'replies', 'favorites'];
 RedThread.utils.strategies = {

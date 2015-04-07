@@ -24,13 +24,19 @@ $(function(){
     RedThread.utils.normalizeTweet(tweet);
 
     var date = new Date(tweet.original.created_at);
-    var formattedDate = (date.getMonth() + 1) + '/' + date.getDate();
+    var formattedDate = [
+      RedThread.utils.months[date.getMonth()],
+      date.getDate()
+    ].join(', ');
+
     $engagements.append(RedThread.templates.engagement({
-      date        : formattedDate,
-      tweet       : tweet,
-      authorities : RedThread.utils.strategies.authority,
-      pillars     : RedThread.utils.strategies.pillar,
-      score       : RedThread.utils.scoreTweet(tweet)
+      date            : formattedDate,
+      tweet           : tweet,
+      authorities     : RedThread.utils.strategies.authority,
+      pillars         : RedThread.utils.strategies.pillar,
+      score           : RedThread.utils.scoreTweet(tweet),
+      topEngagements  : RedThread.utils.getTopEngagements(tweet, 3),
+      colors          : RedThread.utils.colorScheme
     }));
 
     // add an event handler so the checkboxes work

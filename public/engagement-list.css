@@ -1,75 +1,118 @@
-#controls{
-  height: 120px;
-  z-index: 2;
-}
-
 #engagements{
-  margin: 0;
-  padding: 50px 0 0 0;
+  margin: 60px 10px 0;
+  padding: 0;
   list-style-type: none;
+  -webkit-column-count: 3;
+  -webkit-column-break-inside: avoid;
+  -webkit-column-break-before: always;
 }
 
-#engagements h2{
-  font-size: 120%;
-}
-#engagements h3{
-  margin-top: 0;
-  line-height: 140%;
-}
+
 #engagements h4{
   margin-bottom: 10px;
 }
 
-#engagements .tweet{
-  overflow: hidden;
-  position: relative;
+
+#engagements li{
+  background-color: white;
+  color: #2B2B2B;
+  border-radius: 2px;
+  margin-bottom: 20px;
 }
-#engagements .scores{
+#engagements li:last-child{
+  margin-right: 0px;
+}
+
+
+#engagements h2.tweet-text{
+  padding: 5px;
+  line-height: 125%;
+  margin: 7px;
+  font-size: 120%;
+  font-weight: normal;
+  padding-top: 12px;
+}
+#engagements h3.date{
+  font-size: 80%;
+  float: right;
+  opacity: .7;
+  margin: 0;
+  margin: 5px;
+  text-align: right;
+  font-weight: normal;
+  margin-bottom: 5px;
+}
+
+#engagements .scores {
+  border-bottom: 1px solid #dfdddd;
+  overflow: hidden;
+}
+#engagements .scores .score{
+  font-size: 90%;
   float: left;
-  position: absolute;
-  height: 100%;
-  background-color: #2B2B2B;
-  width: 100px;
+  width: 25%;
+  text-align: center;
+  border-right: 1px solid #dfdddd;
+  padding: 14px 0;
+  box-sizing: border-box;
+}
+#engagements .scores .score:last-child{
+  border-right: none;
+  padding-bottom: 0;
+  font-size: 150%;
+  font-weight: bold;
+  padding-top: 11px;
 }
 #engagements .scores i{
   padding-right: 7px;
 }
-#engagements .scores .score{
-  padding-bottom: 5px;
-  font-size: 90%;
-  padding-left: 25px;
-}
-#engagements .scores .total{
-  font-size: 150%;
+
+
+#engagements .button{
+  display: inline-block;
   text-align: center;
-  font-weight: bold;
-  margin-bottom: 10px;
-  background-color: red;
-  background-color: rgba(255,255,255,.1);
-  padding: 10px 0;
+  text-decoration: none;
+  box-sizing: border-box;
+  color: #363636;
+  border-right: 1px solid white;
+  border-top: 1px solid #dfdddd;
+  border-bottom: 1px solid #dfdddd;
+  background: linear-gradient(to bottom, #f4f5f5, #dfdddd);
+}
+#engagements .button .text{
+  padding: 15px 0;
+}
+#engagements .button.down{
+  background: #CCCCCC;
+}
+#engagements .strategy-list .button:last-child{
+  border-right: none;
+}
+#engagements .pillars .button{
+  width: 25%;
+}
+#engagements .authorities .button{
+  width: 20%;
 }
 
-#engagements .tweet-details {
-  padding: 10px 10px 10px 150px;
-  border-bottom: 1px solid #363636;
+
+#engagements .strategy-list {
+  border-bottom: 1px solid white;
 }
-#engagements .tweet-details .container{
-  display: inline-block;
-  vertical-align: top;
-  margin-right: 100px;
+
+#engagements .top-engagements{
+  padding: 0 5px;
 }
-#engagements .twitter-stat{
-  padding-bottom: 5px;
+#engagements .top-engagements ul{
+  list-style-type: none;
+  padding: 0;
 }
-#engagements .twitter-stat .key{
-  width: 125px;
-  display: inline-block;
+#engagements .top-engagements .score{
+  float: left;
 }
-#engagements .strategy-list .checkbox{
-  display: inline-block;
-  width: 100px;
-  margin-right: 15px;
+#engagements .top-engagements li{
+  overflow: hidden;
 }
-#engagements .strategy-list input{
-  margin-right: 5px;
+#engagements .top-engagements p{
+  display: inline;
 }
