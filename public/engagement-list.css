@@ -78,8 +78,6 @@
   border-top: 1px solid #dfdddd;
   border-bottom: 1px solid #dfdddd;
   background: linear-gradient(to bottom, #f4f5f5, #dfdddd);
-}
-#engagements .button .text{
   padding: 15px 0;
 }
 #engagements .button.down{
@@ -101,18 +99,26 @@
 }
 
 #engagements .top-engagements{
-  padding: 0 5px;
+  padding: 0 5px 1px;
 }
 #engagements .top-engagements ul{
   list-style-type: none;
   padding: 0;
 }
-#engagements .top-engagements .score{
-  float: left;
-}
 #engagements .top-engagements li{
-  overflow: hidden;
+  margin-bottom: 15px;
 }
-#engagements .top-engagements p{
-  display: inline;
+#engagements .top-engagements li:last-child{
+  margin-bottom: 5px;
+}
+#engagements .top-engagements .score{
+  width: 50px;
+  display: inline-block;
+}
+#engagements .top-engagements .type{
+  width: 65px;
+  display: inline-block;
+}
+#engagements .top-engagements a{
+  color: #202020;
 }

@@ -1,18 +1,10 @@
-var getInputFromTag = function(tag){
-  var $tweet = $('#tweet-' + tag.id);
-  var selector = 'input[name="' + tag.type + '-' + tag.val + '"]';
-  var $input = $tweet.find(selector);
-
-  return $input;
-};
-
 socket.on('tag-tweet', function(tag){
-  getInputFromTag(tag).prop('checked', true);
+  $('#tweet-' + tag.id).find('.button.' + tag.val).toggleClass('down');
 });
 
 
 socket.on('untag-tweet', function(tag){
-  getInputFromTag(tag).prop('checked', false);
+  $('#tweet-' + tag.id).find('.button.' + tag.val).toggleClass('down');
 });
 
 
@@ -40,14 +32,16 @@ $(function(){
     }));
 
     // add an event handler so the checkboxes work
-    $('#tweet-' + tweet._id).find('input').change(function(e){
+    $('#tweet-' + tweet._id).find('.button').click(function(e){
+      $(this).toggleClass('down');
+
       var evt = 'untag-tweet';
-      if($(this).prop('checked')) evt = 'tag-tweet';
+      if($(this).hasClass('down')) evt = 'tag-tweet';
 
       socket.emit(evt, {
         type  : $(this).data('type'),
         id    : $(this).data('id'),
-        val   : $(this).val()
+        val   : $(this).data('value')
       });
     });
   });

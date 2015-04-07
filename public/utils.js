@@ -166,7 +166,6 @@ RedThread.utils.getTopEngagements = function(tweet, count){
       if(topEngagements.length < count) topEngagements.push(engagement);
       else{
         topEngagements = _.sortBy(topEngagements, 'score').reverse();
-        console.log(_.pluck(topEngagements, 'score'));
         if(topEngagements[count - 1].score < engagement.score){
           topEngagements.pop();
           topEngagements.push(engagement);
