@@ -33,6 +33,7 @@ $(function(){
 
     // add an event handler so the checkboxes work
     $('#tweet-' + tweet._id).find('.button').click(function(e){
+      e.preventDefault();
       $(this).toggleClass('down');
 
       var evt = 'untag-tweet';
