@@ -177,3 +177,12 @@ path {
   font-size: 90%;
   padding-top: 10px;
 }
+
+
+.fa.fa-bolt{
+  padding-left: 5px;
+  color: orange;
+  vertical-align: text-top;
+  font-size: 80%;
+  margin-top: -5px;
+}
