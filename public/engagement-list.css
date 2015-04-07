@@ -3,64 +3,68 @@
   padding: 0;
   list-style-type: none;
   -webkit-column-count: 3;
+  -webkit-column-gap: 35px;
 }
 
 
-#engagements h4{
-  margin-bottom: 10px;
-}
 
-
-#engagements li{
+#engagements li.tweet{
   -webkit-column-break-inside: avoid;
   background-color: white;
   color: #2B2B2B;
   border-radius: 2px;
-  margin-bottom: 20px;
-}
-#engagements li:last-child{
-  margin-right: 0px;
+  margin-bottom: 35px;
 }
 
 
 #engagements h2.tweet-text{
-  padding: 5px;
+  padding: 25px;
   line-height: 125%;
   margin: 7px;
   font-size: 120%;
   font-weight: normal;
-  padding-top: 12px;
+  margin: 0;
 }
 #engagements h3.date{
   font-size: 80%;
   float: right;
   opacity: .7;
   margin: 0;
-  margin: 5px;
+  margin: 15px;
   text-align: right;
   font-weight: normal;
-  margin-bottom: 5px;
+}
+#engagements h4{
+  margin: 0;
+  padding: 10px 0 20px;
+  font-weight: normal;
 }
 
+
 #engagements .scores {
-  border-bottom: 1px solid #dfdddd;
+  border-top: 1px solid #dfdddd;
   overflow: hidden;
+  position: relative;
 }
 #engagements .scores .score{
   font-size: 90%;
   float: left;
   width: 25%;
   text-align: center;
-  border-right: 1px solid #dfdddd;
-  padding: 14px 0;
+  border-left: 1px solid #dfdddd;
+  border-bottom: 1px solid #dfdddd;
+  padding: 5px 0;
+  background-color: white;
   box-sizing: border-box;
+}
+#engagements .scores .score:first-child{
+  border-left: none;
 }
 #engagements .scores .score:last-child{
   border-right: none;
-  padding-bottom: 0;
+  padding: 10px 0;
   font-size: 150%;
   font-weight: bold;
-  padding-top: 11px;
 }
 #engagements .scores i{
   padding-right: 7px;
@@ -79,6 +83,9 @@
   background: linear-gradient(to bottom, #f4f5f5, #dfdddd);
   padding: 15px 0;
 }
+#engagements .button:hover{
+  background: #dfdddd;
+}
 #engagements .button.down{
   background: #CCCCCC;
 }
@@ -95,23 +102,34 @@
 
 #engagements .strategy-list {
   border-bottom: 1px solid white;
+  border-radius: 2px;
 }
 
 #engagements .top-engagements{
-  padding: 0 5px 1px;
+  background-color: #f4f5f5;
+  padding: 0 25px 15px;
+  margin-top: -19px;
+  border-bottom: 1px solid #dfdddd;
+}
+#engagements .pillars{
+  margin-top: 10px;
 }
 #engagements .top-engagements ul{
   list-style-type: none;
   padding: 0;
 }
+#engagements .top-engagements i{
+  margin-right: 10px;
+}
 #engagements .top-engagements li{
-  margin-bottom: 15px;
+  padding-top: 15px;
 }
 #engagements .top-engagements li:last-child{
   margin-bottom: 5px;
 }
 #engagements .top-engagements .score{
   width: 50px;
+  font-weight: bold;
   display: inline-block;
 }
 #engagements .top-engagements .type{
