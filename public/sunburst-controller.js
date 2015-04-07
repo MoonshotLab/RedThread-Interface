@@ -59,6 +59,28 @@ $(function(){
   RedThread.utils.makeKey(strategy);
 
 
+  // start the controls, listen for change
+  RedThread.controls.init({
+    strategyChange : function(strategy){
+      RedThread.utils.makeKey(strategy);
+      $('#graphic').html('');
+      $('#time-selector').html('');
+
+      sunburst.draw({
+        data : RedThread.utils.createNestedDataTreeFromTweets(tweets, strategy)
+      });
+
+      timeSelector.draw({
+        data : RedThread.utils.scoreStrategies(tweets, strategy)
+      });
+    },
+
+    viewModelChange : function(model){
+      sunburst.updateViewModel(model);
+    }
+  });
+
+
   // create a container for the remote data
   var tweets = null;
 
@@ -85,26 +107,6 @@ $(function(){
   });
 
 
-  // listen for change to the strategy input, make a new key
-  // and redraw the sunburst
-  $('.strategy-input').change(function(){
-    strategy = $('input[name=strategy-type]:checked').val();
-    RedThread.utils.makeKey(strategy);
-    $('#graphic').html('');
-
-    sunburst.draw({
-      data : RedThread.utils.createNestedDataTreeFromTweets(tweets, strategy)
-    });
-  });
-
-
-  // listen for changes to the view model input
-  $('.view-model-input').change(function(){
-    viewModel = $('input[name=model-by]:checked').val();
-    sunburst.updateViewModel(viewModel);
-  });
-
-
   // fetch the remote tweet data
   $.ajax({
     url : '/tweets'
@@ -114,13 +116,15 @@ $(function(){
     // tweets can comeback from the server a little bit incomplete
     tweets.forEach(RedThread.utils.normalizeTweet);
 
-    // draw the sunburst and time selectors
+    // draw the sunburst
     sunburst.draw({
       data      : RedThread.utils.createNestedDataTreeFromTweets(tweets, strategy),
       viewModel : viewModel
     });
+
+    // draw the time selector
     timeSelector.draw({
-      data : RedThread.utils.scoreStrategies(tweets)
+      data : RedThread.utils.scoreStrategies(tweets, strategy)
     });
   });
 });

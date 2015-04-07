@@ -180,8 +180,9 @@ RedThread.utils.getTopEngagements = function(tweet, count){
 
 
 // pass in a set of tweets and a list of scored strategies will be returned
-// as well as min and max values for data and score
-RedThread.utils.scoreStrategies = function(tweets){
+// as well as min and max values for data and score. Optionally pass a strategy
+// if you only want that strategy to get scored
+RedThread.utils.scoreStrategies = function(tweets, strategy){
   var returned  = { strategies : [], dateRange : [], maxScore : 0 };
   var parseDate = d3.time.format('%d-%m-%Y').parse;
 
@@ -230,14 +231,28 @@ RedThread.utils.scoreStrategies = function(tweets){
       returned.dateRange.push(parsedDate);
   };
 
-  // loop over the tweets, scoring the pillars and authorities
-  tweets.forEach(function(tweet){
+
+  var scorePillar = function(tweet){
     tweet.pillar.forEach(function(pillarName){
       scoreStrategy(pillarName, tweet);
     });
+  };
+
+  var scoreAuthority = function(tweet){
     tweet.authority.forEach(function(authorityName){
       scoreStrategy(authorityName, tweet);
     });
+  };
+
+  // loop over the tweets, scoring either the pillars and/or authorities
+  tweets.forEach(function(tweet){
+
+    if(strategy == 'pillar') scorePillar(tweet);
+    else if(strategy == 'authority') scoreAuthority(tweet);
+    else {
+      scorePillar(tweet);
+      scoreAuthority(tweet);
+    }
   });
 
   return returned;

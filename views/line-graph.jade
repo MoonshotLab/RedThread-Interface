@@ -7,6 +7,7 @@ block head
   script(src='/templates.js')
   script(src='/utils.js')
   script(src='/calculate.js')
+  script(src='/controls.js')
   script(src='/time-selector.js')
   script(src='/line-graph.js')
   script(src='/line-graph-controller.js')
@@ -27,19 +28,19 @@ block content
         h4 Strategy
         form
           label
-            input.strategy-input(type='checkbox', name='strategy-type', value='pillar', checked)
+            input.strategy-input(type='radio', name='strategy-type', value='pillar', checked)
             | Pillar
           label
-            input.strategy-input(type='checkbox', name='strategy-type', value='authority')
+            input.strategy-input(type='radio', name='strategy-type', value='authority')
             | Authority
       .control
         h4 View Model
         form
           label
-            input.scale-input(type='radio', name='scale-by', value='influence', checked)
+            input.view-model-input(type='radio', name='model-by', value='influence', checked)
             | Impact
           label
-            input.scale-input(type='radio', name='scale-by', value='count')
+            input.view-model-input(type='radio', name='model-by', value='count')
             | Post Frequency
       #time-selector
 
