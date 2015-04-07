@@ -55,26 +55,23 @@ $(function(){
   var viewModel = $('input[name=model-by]:checked').val();
 
 
-  // make the key and default it to the selected strategy
-  RedThread.utils.makeKey(strategy);
+  // draw the sunburst and time selector
+  var drawGraphs = function(strategy){
+    $('#graphic').html('');
+    $('#time-selector').html('');
+
+    var tree   = RedThread.utils.createNestedDataTreeFromTweets(tweets, strategy)
+    var scored = RedThread.utils.scoreStrategiesByDate(tweets, strategy);
+    sunburst.draw({     data : tree   });
+    timeSelector.draw({ data : scored });
+
+    RedThread.utils.makeKey(strategy, scored);
+  };
 
 
   // start the controls, listen for change
   RedThread.controls.init({
-    strategyChange : function(strategy){
-      RedThread.utils.makeKey(strategy);
-      $('#graphic').html('');
-      $('#time-selector').html('');
-
-      sunburst.draw({
-        data : RedThread.utils.createNestedDataTreeFromTweets(tweets, strategy)
-      });
-
-      timeSelector.draw({
-        data : RedThread.utils.scoreStrategies(tweets, strategy)
-      });
-    },
-
+    strategyChange  : drawGraphs,
     viewModelChange : function(model){
       sunburst.updateViewModel(model);
     }
@@ -116,15 +113,6 @@ $(function(){
     // tweets can comeback from the server a little bit incomplete
     tweets.forEach(RedThread.utils.normalizeTweet);
 
-    // draw the sunburst
-    sunburst.draw({
-      data      : RedThread.utils.createNestedDataTreeFromTweets(tweets, strategy),
-      viewModel : viewModel
-    });
-
-    // draw the time selector
-    timeSelector.draw({
-      data : RedThread.utils.scoreStrategies(tweets, strategy)
-    });
+    drawGraphs(strategy);
   });
 });

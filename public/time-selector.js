@@ -36,9 +36,11 @@ RedThread.TimeSelector.prototype.draw = function(opts){
 
   // draw the graph
   for(var name in this.data.strategies){
-    this.data.strategies[name] = _.sortBy(this.data.strategies[name], 'date');
+    this.data.strategies[name].children = _.sortBy(
+      this.data.strategies[name].children, 'date'
+    );
     context.append('path')
-      .datum(self.data.strategies[name])
+      .datum(self.data.strategies[name].children)
       .attr('class', 'line ' + name)
       .attr('transform', 'translate(0, -25)')
       .attr('d', line);
@@ -73,9 +75,9 @@ RedThread.TimeSelector.prototype.draw = function(opts){
 
     for(var key in strategies){
       days.forEach(function(day){
-        var match = _.findWhere(strategies[key], { date : day });
+        var match = _.findWhere(strategies[key].children, { date : day });
         if(!match){
-          strategies[key].push({
+          strategies[key].children.push({
             date        : day,
             dateString  : format(day),
             score       : 0

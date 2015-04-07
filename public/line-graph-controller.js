@@ -1,28 +1,30 @@
+// create a namespace for the current page
+RedThread.page = {};
+
+
+
+
 $(function(){
-  // what strategy and view model are we going to start working with?
-  var strategy  = $('input[name=strategy-type]:checked').val();
-  var viewModel = $('input[name=model-by]:checked').val();
+  // what strategy are we going to start working with?
+  var strategyInput = $('input[name=strategy-type]:checked').val();
 
 
-  // make the key and default it to the selected strategy
-  RedThread.utils.makeKey(strategy);
+  // draw the line graph and time selector
+  var drawGraphs = function(strategy){
+    $('#graphic').html('');
+    $('#time-selector').html('');
+
+    var scored = RedThread.utils.scoreStrategiesByDate(tweets, strategy);
+    lineGraph.draw({    data : scored });
+    timeSelector.draw({ data : scored });
+
+    RedThread.utils.makeKey(strategy, scored);
+  };
 
 
   // start the controls, listen for change
   RedThread.controls.init({
-    strategyChange : function(strategy){
-      RedThread.utils.makeKey(strategy);
-      $('#graphic').html('');
-      $('#time-selector').html('');
-
-      lineGraph.draw({
-        data : RedThread.utils.scoreStrategies(tweets, strategy)
-      });
-
-      timeSelector.draw({
-        data : RedThread.utils.scoreStrategies(tweets, strategy)
-      });
-    }
+    strategyChange : drawGraphs
   });
 
 
@@ -64,15 +66,8 @@ $(function(){
     // tweets can comeback from the server a little bit incomplete
     tweets.forEach(RedThread.utils.normalizeTweet);
 
-    // draw the line graph
-    lineGraph.draw({
-      data : RedThread.utils.scoreStrategies(tweets, strategy)
-    });
-
-    // draw the time selector
-    timeSelector.draw({
-      data : RedThread.utils.scoreStrategies(tweets, strategy)
-    });
+    // draw time selector and line graph
+    drawGraphs(strategyInput);
   });
 
 });

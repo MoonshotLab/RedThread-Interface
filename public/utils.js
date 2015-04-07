@@ -14,21 +14,6 @@ RedThread.utils.normalizeTweet = function(tweet){
 };
 
 
-// define an rgb strategy based color scheme
-RedThread.utils.colorScheme = {
-  'default'   : [0, 0, 0],
-  'celebrate' : [76, 253, 89],
-  'inspire'   : [191, 74, 251],
-  'discover'  : [252, 71, 195],
-  'create'    : [254, 240, 121],
-  'crew'      : [114, 164, 252],
-  'craft'     : [76, 253, 89],
-  'style'     : [191, 74, 251],
-  'music'     : [252, 71, 195],
-  'play'      : [254, 240, 121]
-};
-
-
 
 // creates a nested data tree from tweets based on strategy for pillars,
 // strategy for authorities, brand actions, and the final fan action
@@ -113,17 +98,12 @@ RedThread.utils.createNestedDataTreeFromTweets = function(tweets, strategy){
 // build a color coded key showcasing either authorities or pillars
 // automaticall writes do a dom object
 // strategy = 'pillar' or 'authority'
-RedThread.utils.makeKey = function(strategy){
-  var keys = [];
-
+RedThread.utils.makeKey = function(strategy, scored){
   RedThread.utils.strategies[strategy].forEach(function(key){
-    keys.push({
-      color : 'rgb(' + RedThread.utils.colorScheme[key].join(',') + ')',
-      value : key
-    });
+    scored.strategies[key].color = 'rgb(' + RedThread.utils.colorScheme[key].join(',') + ')';
   });
 
-  $('#key').html(RedThread.templates.key({ keys : keys }));
+  $('#key').html(RedThread.templates.key(scored));
 };
 
 
@@ -179,8 +159,8 @@ RedThread.utils.getTopEngagements = function(tweet, count){
 // result set.
 // returns a list of scored strategies, min and max values for date, and
 // the score.
-RedThread.utils.scoreStrategies = function(tweets, strategy){
-  var returned  = { strategies : [], dateRange : [], maxScore : 0 };
+RedThread.utils.scoreStrategiesByDate = function(tweets, strategy){
+  var returned  = { strategies : {}, dateRange : [], maxScore : 0, score : 0 };
   var parseDate = d3.time.format('%d-%m-%Y').parse;
 
   var scoreStrategy = function(strategyName, tweet){
@@ -206,15 +186,22 @@ RedThread.utils.scoreStrategies = function(tweets, strategy){
     var parsedDate  = parseDate(dateString);
 
     // create the container if it doesn't already exist
-    if(!returned.strategies[strategyName]) returned.strategies[strategyName] = [];
+    if(!returned.strategies[strategyName])
+      returned.strategies[strategyName] = { score : 0, children : []};
+
+    // add to the score
+    returned.strategies[strategyName].score += score;
+    returned.score += score;
 
     // look for an object with a matching date, if none found, add it
-    var foundDateScore = _.findWhere(returned.strategies[strategyName],
-      { dateString : dateString });
+    var foundDateScore = _.findWhere(
+      returned.strategies[strategyName].children,
+      { dateString : dateString }
+    );
 
     if(foundDateScore) foundDateScore.score += score;
     else {
-      returned.strategies[strategyName].push({
+      returned.strategies[strategyName].children.push({
         dateString  : dateString,
         date        : parsedDate,
         score       : score
@@ -257,6 +244,7 @@ RedThread.utils.scoreStrategies = function(tweets, strategy){
 };
 
 
+
 RedThread.utils.months = ['January', 'February', 'March', 'April', 'May',
   'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 RedThread.utils.engagementTypes = ['retweet', 'favorite', 'reply'];
@@ -264,4 +252,17 @@ RedThread.utils.pluralEngagementTypes = ['retweets', 'favorites', 'replies'];
 RedThread.utils.strategies = {
   pillar    : ['celebrate', 'inspire', 'discover', 'create'],
   authority : ['crew', 'craft', 'style', 'music', 'play']
+};
+// define an rgb strategy based color scheme
+RedThread.utils.colorScheme = {
+  'default'   : [0, 0, 0],
+  'celebrate' : [76, 253, 89],
+  'inspire'   : [191, 74, 251],
+  'discover'  : [252, 71, 195],
+  'create'    : [254, 240, 121],
+  'crew'      : [114, 164, 252],
+  'craft'     : [76, 253, 89],
+  'style'     : [191, 74, 251],
+  'music'     : [252, 71, 195],
+  'play'      : [254, 240, 121]
 };

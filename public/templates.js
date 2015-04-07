@@ -88,12 +88,16 @@ RedThread.templates.drawer.engagement = _.template([
 
 
 RedThread.templates.key = _.template([
-  '<% keys.forEach(function(key){ %>',
-    '<li>',
-      '<span class="key" style=background-color:<%= key.color %>></span>',
-      '<span class="value"><%= key.value %></span>',
-    '</li>',
-  '<% }) %>',
+  '<h2>Flavor Index: <%= Math.round(score) %></h2>',
+  '<ul>',
+    '<% for(var key in strategies){ %>',
+      '<li>',
+        '<span class="bar" style=background-color:<%= strategies[key].color %>></span>',
+        '<span class="key"><%= key %></span>',
+        '<span class="value"><%= Math.round(strategies[key].score*100)/100 %></span>',
+      '</li>',
+    '<% } %>',
+  '</ul>'
 ].join(''));
 
 
