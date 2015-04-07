@@ -99,11 +99,14 @@ RedThread.utils.createNestedDataTreeFromTweets = function(tweets, strategy){
 // automaticall writes do a dom object
 // strategy = 'pillar' or 'authority'
 RedThread.utils.makeKey = function(strategy, scored){
+  var clean = { score : scored.score, strategies : {} };
+
   RedThread.utils.strategies[strategy].forEach(function(key){
     scored.strategies[key].color = 'rgb(' + RedThread.utils.colorScheme[key].join(',') + ')';
+    clean.strategies[key] = scored.strategies[key];
   });
 
-  $('#key').html(RedThread.templates.key(scored));
+  $('#key').html(RedThread.templates.key(clean));
 };
 
 

@@ -94,7 +94,7 @@ RedThread.templates.key = _.template([
       '<li>',
         '<span class="bar" style=background-color:<%= strategies[key].color %>></span>',
         '<span class="key"><%= key %></span>',
-        '<span class="value"><%= Math.round(strategies[key].score*100)/100 %></span>',
+        '<span class="value"><%= Math.round(strategies[key].score) %></span>',
       '</li>',
     '<% } %>',
   '</ul>'

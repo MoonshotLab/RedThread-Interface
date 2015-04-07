@@ -14,11 +14,12 @@ $(function(){
     $('#graphic').html('');
     $('#time-selector').html('');
 
-    var scored = RedThread.utils.scoreStrategiesByDate(tweets, strategy);
+    var scored    = RedThread.utils.scoreStrategiesByDate(tweets, strategy);
+    var keyScore  = RedThread.utils.scoreStrategiesByDate(tweets);
     lineGraph.draw({    data : scored });
     timeSelector.draw({ data : scored });
 
-    RedThread.utils.makeKey(strategy, scored);
+    RedThread.utils.makeKey(strategy, keyScore);
   };
 
 

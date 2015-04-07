@@ -60,12 +60,14 @@ $(function(){
     $('#graphic').html('');
     $('#time-selector').html('');
 
-    var tree   = RedThread.utils.createNestedDataTreeFromTweets(tweets, strategy)
-    var scored = RedThread.utils.scoreStrategiesByDate(tweets, strategy);
+    var tree      = RedThread.utils.createNestedDataTreeFromTweets(tweets, strategy);
+    var scored    = RedThread.utils.scoreStrategiesByDate(tweets, strategy);
+    var keyScore  = RedThread.utils.scoreStrategiesByDate(tweets);
+
     sunburst.draw({     data : tree   });
     timeSelector.draw({ data : scored });
 
-    RedThread.utils.makeKey(strategy, scored);
+    RedThread.utils.makeKey(strategy, keyScore);
   };
 
 
