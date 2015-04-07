@@ -13,7 +13,7 @@ RedThread.TimeSelector.prototype.draw = function(opts){
   for(var key in opts){ self[key] = opts[key]; }
 
   var x = d3.time.scale().range([0, this.width]);
-  var y = d3.scale.linear().range([this.height, 0]);
+  var y = d3.scale.linear().range([this.height, 30]);
 
   var xAxis = d3.svg.axis().scale(x).orient('bottom')
     .tickFormat(d3.time.format('%m/%d'));

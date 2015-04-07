@@ -8,7 +8,7 @@ RedThread.calculate = {
   influencerScore : function(user){
     var friendDiff = user.followers_count - user.friends_count;
     if(friendDiff < 1) friendDiff = 1;
-    if(friendDiff > 5000) friendDiff = 5000;
+    if(friendDiff > 50000) friendDiff = 50000;
     var score = friendDiff/100;
     return Math.round((score + 0.00001) * 100) / 100;
   },
