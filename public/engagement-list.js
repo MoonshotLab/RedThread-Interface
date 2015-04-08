@@ -1,3 +1,11 @@
+var queryParams = {};
+
+location.search.replace('?', '').split('&').forEach(function(query){
+  var split = query.split('=');
+  queryParams[split[0]] = split[1];
+});
+
+
 socket.on('tag-tweet', function(tag){
   $('#tweet-' + tag.id).find('.button.' + tag.val).toggleClass('down');
 });
@@ -21,8 +29,12 @@ $(function(){
       date.getDate()
     ].join(', ');
 
+    var isAdmin = false;
+    if(queryParams.admin) isAdmin = true;
+
     $engagements.append(RedThread.templates.engagement({
       date            : formattedDate,
+      isAdmin         : isAdmin,
       tweet           : tweet,
       authorities     : RedThread.utils.strategies.authority,
       pillars         : RedThread.utils.strategies.pillar,
