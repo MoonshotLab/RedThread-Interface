@@ -16,6 +16,11 @@ socket.on('untag-tweet', function(tag){
 });
 
 
+socket.on('tweet-deleted', function(tag){
+  $('#tweet-' + tag.id).remove();
+});
+
+
 
 $(function(){
   var $engagements = $('#engagements');
@@ -43,7 +48,16 @@ $(function(){
       colors          : RedThread.utils.colorScheme
     }));
 
-    // add an event handler so the checkboxes work
+    $('#tweet-' + tweet._id).find('.delete').click(function(e){
+      var confirmation = confirm('Are you sure you want to delete this? It\'ll be gone FOREVER. Like forever forever. This is unrecoverable. SRSLY.');
+      if(confirmation){
+        socket.emit('delete-tweet', {
+          id : $(this).data('id')
+        });
+      }
+    });
+
+    // allow content to be tagged
     $('#tweet-' + tweet._id).find('.button').click(function(e){
       e.preventDefault();
       $(this).toggleClass('down');

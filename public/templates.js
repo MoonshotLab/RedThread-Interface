@@ -104,6 +104,9 @@ RedThread.templates.key = _.template([
 
 RedThread.templates.engagement = _.template([
   '<li id="tweet-<%= tweet._id %>" class="tweet">',
+    '<% if(isAdmin) { %>',
+      '<a class="delete" data-id="<%= tweet._id %>" href="#"><i class="fa fa-times"></i></a>',
+    '<% } %>',
     '<h3 class="date"><%= date %></h3>',
     '<h2 class="tweet-text"><%= tweet.original.text %></h2>',
 

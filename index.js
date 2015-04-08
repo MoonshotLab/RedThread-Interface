@@ -50,6 +50,12 @@ io.on('connection', function(socket){
     });
   });
 
+  socket.on('delete-tweet', function(data){
+    db.deleteTweet(data).then(function(){
+      io.sockets.emit('tweet-deleted', { id : data.id });
+    });
+  });
+
   socket.on('untag-tweet', function(tag){
     db.removeTagFromTweet(tag).then(function(){
       socket.broadcast.emit('untag-tweet', tag);

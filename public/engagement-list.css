@@ -14,6 +14,17 @@
   color: #2B2B2B;
   border-radius: 2px;
   margin-bottom: 35px;
+  position: relative;
+}
+
+#engagements li .fa-times{
+  color: #C70000;
+  position: absolute;
+  top: 5px;
+  left: 5px;
+}
+#engagements li .fa-times:hover{
+  color: red;
 }
 
 
