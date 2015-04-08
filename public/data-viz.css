@@ -33,6 +33,9 @@ path {
   background: black;
   border-bottom: 1px solid #363636;
 }
+#nav i{
+  padding-right: 5px;
+}
 #nav ul{
   margin: 0;
   padding: 0;
@@ -62,6 +65,7 @@ path {
   border-right: 1px solid #404040;
 }
 #nav li.active a{
+  color: #ecf0f1;
   background: #202020;
 }
 #nav a{
@@ -70,6 +74,7 @@ path {
   padding: 15px 20px 19px 20px;
   display: block;
   top: 4px;
+  color: #D1D1D1;
 }
 
 

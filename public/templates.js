@@ -125,7 +125,7 @@ RedThread.templates.engagement = _.template([
               '<% } else { %>',
                 '<i class="fa fa-<%= topEngagement.type %>"></i>',
               '<% } %> ',
-              '<a class="user-name" title="<%= topEngagement.text %>" href="http://twitter.com/topEngagement.user.screen_name %>">',
+              '<a class="user-name" target="_blank" title="<%= topEngagement.text %>" href="http://twitter.com/<%= topEngagement.user.screen_name %>">',
                 '<%= topEngagement.user.screen_name %>',
               '</a>',
             '</li>',
