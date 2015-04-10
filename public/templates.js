@@ -160,3 +160,15 @@ RedThread.templates.engagement = _.template([
     '<% } %>',
   '</li>'
 ].join(''));
+
+
+RedThread.templates.legend = _.template([
+  '<ul>',
+    '<% _.each(nameScores, function(nameScore){ %>',
+      '<li>',
+        '<span class="key"><%= nameScore.name %></span>',
+        '<span class="value"><%= Math.round(nameScore.score*100)/100 %></span>',
+      '</li>',
+    '<% }); %>',
+  '</ul>',
+].join(''));

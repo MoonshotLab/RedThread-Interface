@@ -80,30 +80,35 @@ path {
 
 
 
-#key{
+#key, #legend{
   z-index: 2;
   position: absolute;
   padding: 5px 25px 10px 10px;
   top: 80px;
   background: #252525;
   font-size: 90%;
+  border: 1px solid #363636;
+  border-left: none;
+}
+#legend{
+  border: 1px solid #363636;
 }
 #key h2{
   margin: 5px 0;
 }
-#key ul{
+#key ul, #legend ul{
   margin: 0;
   padding: 0;
   list-style-type: none;
 }
-#key li{
+#key li, #legend li{
   padding-top: 5px;
 }
-#key .key{
+#key .key, #legend .key{
   width: 75px;
   display: inline-block;
 }
-#key .bar{
+#key .bar, #legend .bar{
   width: 10px;
   height: 10px;
   margin-right: 5px;
