@@ -66,6 +66,17 @@ RedThread.TimeSelector.prototype.draw = function(opts){
   // is calculated. This takes each day and ensures there's a score of zero
   // at every day
   function fillInBlankDates(strategies){
+    var fill = function(day){
+      var match = _.findWhere(strategies[key].children, { date : day });
+      if(!match){
+        strategies[key].children.push({
+          date        : day,
+          dateString  : format(day),
+          score       : 0
+        });
+      }
+    };
+
     var domain = x.domain();
     var format = d3.time.format('%d-%m-%Y');
     var maxDay = new Date(domain[1]);
@@ -73,17 +84,6 @@ RedThread.TimeSelector.prototype.draw = function(opts){
     maxDay.setDate(maxDay.getDate() + 1);
     var days = d3.time.days(domain[0], maxDay);
 
-    for(var key in strategies){
-      days.forEach(function(day){
-        var match = _.findWhere(strategies[key].children, { date : day });
-        if(!match){
-          strategies[key].children.push({
-            date        : day,
-            dateString  : format(day),
-            score       : 0
-          });
-        }
-      });
-    }
+    for(var key in strategies){ days.forEach(fill); }
   }
 };
